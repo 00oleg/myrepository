@@ -12,6 +12,7 @@ interface SearchResultState {
 interface SearchResultsProps {
   results: SearchResultItem[];
   loading: boolean;
+  error: string | null;
 }
 
 class SearchResults extends Component<SearchResultsProps, SearchResultState> {
@@ -31,7 +32,17 @@ class SearchResults extends Component<SearchResultsProps, SearchResultState> {
       throw new Error('Error in event handler');
     }
 
-    const { loading, results } = this.props;
+    const { loading, results, error } = this.props;
+
+    if (error) {
+      return (
+        <div className="search-result">
+          <div className="no-results no-results--error">
+            <div>{error}</div>
+          </div>
+        </div>
+      );
+    }
 
     if (loading) {
       return (

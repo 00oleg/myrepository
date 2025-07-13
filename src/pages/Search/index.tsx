@@ -15,6 +15,7 @@ interface SearchPageState {
   searchText: string;
   results: SearchResult[];
   loading: boolean;
+  error: string | null;
 }
 
 class SearchPage extends Component<SearchPageProps, SearchPageState> {
@@ -24,6 +25,7 @@ class SearchPage extends Component<SearchPageProps, SearchPageState> {
       searchText: localStorage.getItem('searchText') || '',
       results: [],
       loading: false,
+      error: null,
     };
   }
 
@@ -54,22 +56,26 @@ class SearchPage extends Component<SearchPageProps, SearchPageState> {
           searchText: clearSearchText,
           results: animals,
           loading: false,
+          error: null,
         });
       })
       .catch((error) => {
         console.error(error);
-        this.setState({ loading: false });
+        this.setState({
+          loading: false,
+          error: error?.message || 'Something went wrong',
+        });
         throw new Error(error);
       });
   };
 
   render() {
-    const { searchText, results, loading } = this.state;
+    const { searchText, results, loading, error } = this.state;
 
     return (
       <>
         <SearchTop searchText={searchText} onSearch={this.handleSearch} />
-        <SearchResults loading={loading} results={results} />
+        <SearchResults loading={loading} results={results} error={error} />
       </>
     );
   }

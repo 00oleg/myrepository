@@ -104,3 +104,7 @@ input[type='text'] {
   color: #fff;
   border-radius: 10px;
 }
+
+.no-results--error {
+  background-color: #f66161;
+}
