@@ -8,6 +8,7 @@ interface SearchPageProps {
 
 interface SearchResult {
   name: string;
+  earthAnimal: string;
 }
 
 interface SearchPageState {
@@ -20,14 +21,19 @@ class SearchPage extends Component<SearchPageProps, SearchPageState> {
   constructor(props: SearchPageProps) {
     super(props);
     this.state = {
-      searchText: '',
+      searchText: localStorage.getItem('searchText') || '',
       results: [],
       error: null,
     };
   }
 
+  componentDidMount() {
+    this.handleSearch(this.state.searchText);
+  }
+
   handleSearch = (newSearchText: string) => {
     const clearSearchText = newSearchText.trim();
+    localStorage.setItem('searchText', clearSearchText);
 
     fetch(
       `https://stapi.co/api/v1/rest/animal/search?name=${clearSearchText}`,

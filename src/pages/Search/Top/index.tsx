@@ -12,7 +12,7 @@ interface SearchInputState {
 class SearchTop extends Component<SearchInputProps, SearchInputState> {
   constructor(props: SearchInputProps) {
     super(props);
-    this.state = { searchText: '' };
+    this.state = { searchText: props.searchText };
   }
 
   handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,7 +25,7 @@ class SearchTop extends Component<SearchInputProps, SearchInputState> {
 
   render() {
     return (
-      <div>
+      <div className="search-form">
         <input
           type="text"
           value={this.state.searchText}
