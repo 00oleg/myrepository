@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import SearchTop from '../../components/Search';
-import SearchResults from '../../components/Result';
+import SearchResults from '../../components/Results';
 
 interface SearchPageProps {
   params: object;
@@ -47,7 +47,23 @@ class SearchPage extends Component<SearchPageProps, SearchPageState> {
     )
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Response was not ok');
+          return response.json().then((errorData) => {
+            let errorMessage = errorData.message;
+
+            if (response.status >= 500) {
+              errorMessage = 'Server Error';
+            } else if (response.status >= 400) {
+              errorMessage = 'Not Found';
+            } else if (!errorMessage) {
+              errorMessage = 'Response was not ok';
+            }
+
+            this.setState({
+              loading: false,
+              error: errorMessage,
+            });
+            throw new Error(errorMessage);
+          });
         }
         return response.json();
       })
@@ -60,12 +76,10 @@ class SearchPage extends Component<SearchPageProps, SearchPageState> {
         });
       })
       .catch((error) => {
-        console.error(error);
         this.setState({
           loading: false,
           error: error?.message || 'Something went wrong',
         });
-        throw new Error(error);
       });
   };
 

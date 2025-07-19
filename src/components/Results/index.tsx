@@ -1,6 +1,6 @@
 import { Component } from 'react';
 
-interface SearchResultItem {
+export interface SearchResultItem {
   name: string;
   earthAnimal: string;
 }
@@ -63,9 +63,11 @@ class SearchResults extends Component<SearchResultsProps, SearchResultState> {
         {results.length ? (
           <ul>
             {results.map((result, index) => (
-              <li key={index}>
-                <strong>{result.name}</strong> -
-                <span>Earth Animal: {result.earthAnimal ? 'Yes' : 'No'}</span>
+              <li key={index} data-testid={'card-item'}>
+                <strong>{result?.name || 'Undefined name'}</strong> -
+                <span>
+                  Earth Animal: {result?.earthAnimal || false ? 'Yes' : 'No'}
+                </span>
               </li>
             ))}
           </ul>
