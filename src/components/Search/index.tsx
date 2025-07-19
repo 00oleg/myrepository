@@ -12,7 +12,9 @@ interface SearchInputState {
 class SearchTop extends Component<SearchInputProps, SearchInputState> {
   constructor(props: SearchInputProps) {
     super(props);
-    this.state = { searchText: props.searchText };
+    this.state = {
+      searchText: props.searchText || localStorage.getItem('searchText') || '',
+    };
   }
 
   handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,6 +22,7 @@ class SearchTop extends Component<SearchInputProps, SearchInputState> {
   };
 
   handleSearch = () => {
+    localStorage.setItem('searchText', this.state.searchText);
     this.props.onSearch(this.state.searchText);
   };
 

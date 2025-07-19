@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import SearchTop from '../../components/Top';
+import SearchTop from '../../components/Search';
 import SearchResults from '../../components/Result';
 
 interface SearchPageProps {
