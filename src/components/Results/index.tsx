@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import SearchResultsCard from '../Card';
+import Loading from '../Loading';
 
 export interface SearchResultItem {
   name: string;
@@ -46,11 +47,7 @@ class SearchResults extends Component<SearchResultsProps, SearchResultState> {
     }
 
     if (loading) {
-      return (
-        <div className="search-result">
-          <div>Loading...</div>
-        </div>
-      );
+      return <Loading loading={true} />;
     }
 
     return (
