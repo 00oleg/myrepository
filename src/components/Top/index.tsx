@@ -27,11 +27,14 @@ class SearchTop extends Component<SearchInputProps, SearchInputState> {
     return (
       <div className="search-form">
         <input
+          data-testid={'search-input'}
           type="text"
           value={this.state.searchText}
           onChange={this.handleChange}
         />
-        <button onClick={this.handleSearch}>Search</button>
+        <button data-testid={'search-button'} onClick={this.handleSearch}>
+          Search
+        </button>
       </div>
     );
   }
