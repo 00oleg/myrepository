@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import SearchResultsCard from '../Card';
 
 export interface SearchResultItem {
   name: string;
@@ -63,12 +64,11 @@ class SearchResults extends Component<SearchResultsProps, SearchResultState> {
         {results.length ? (
           <ul>
             {results.map((result, index) => (
-              <li key={index} data-testid={'card-item'}>
-                <strong>{result?.name || 'Undefined name'}</strong> -
-                <span>
-                  Earth Animal: {result?.earthAnimal || false ? 'Yes' : 'No'}
-                </span>
-              </li>
+              <SearchResultsCard
+                key={index}
+                name={result?.name}
+                earthAnimal={result?.earthAnimal}
+              />
             ))}
           </ul>
         ) : (
