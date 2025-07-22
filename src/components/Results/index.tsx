@@ -1,79 +1,68 @@
-import { Component } from 'react';
-import SearchResultsCard from '../Card';
+import { useState } from 'react';
 import Loading from '../Loading';
+import Card from '../Card';
 
-export interface SearchResultItem {
+interface SearchResultItem {
   name: string;
   earthAnimal: string;
-}
-
-interface SearchResultState {
-  hasError: boolean;
+  uid: string;
 }
 
 interface SearchResultsProps {
   results: SearchResultItem[];
   loading: boolean;
-  error: string | null;
+  error: string;
 }
 
-class SearchResults extends Component<SearchResultsProps, SearchResultState> {
-  constructor(props: SearchResultsProps) {
-    super(props);
-    this.state = { hasError: false };
-  }
+const SearchResults = ({ loading, results, error }: SearchResultsProps) => {
+  const [hasError, setHasError] = useState(false);
 
-  handleClick = () => {
-    this.setState({
-      hasError: true,
-    });
+  const handleHasError = () => {
+    setHasError(true);
   };
 
-  render() {
-    if (this.state.hasError) {
-      throw new Error('Error in event handler');
-    }
+  if (hasError) {
+    throw new Error('Error in event handler');
+  }
 
-    const { loading, results, error } = this.props;
-
-    if (error) {
-      return (
-        <div className="search-result">
-          <div className="no-results no-results--error">
-            <div>{error}</div>
-          </div>
-        </div>
-      );
-    }
-
-    if (loading) {
-      return <Loading loading={true} />;
-    }
-
+  if (error) {
     return (
       <div className="search-result">
-        <h2>
-          Search Star Trek Animals
-          <button className="btn-error" onClick={this.handleClick}>
-            Get Error
-          </button>
-        </h2>
-        {results.length ? (
-          <ul>
-            {results.map((result, index) => (
-              <SearchResultsCard
-                key={index}
-                name={result?.name}
-                earthAnimal={result?.earthAnimal}
-              />
-            ))}
-          </ul>
-        ) : (
-          <div className="no-results">No results</div>
-        )}
+        <div className="no-results no-results--error">
+          <div>{error}</div>
+        </div>
       </div>
     );
   }
-}
+
+  if (loading) {
+    return <Loading loading={true} />;
+  }
+
+  return (
+    <div className="search-result">
+      <h2>
+        Search Star Trek Animals
+        <button className="btn-error" onClick={handleHasError}>
+          Get Error
+        </button>
+      </h2>
+      {results.length ? (
+        <div>
+          {results.map((result, index) => (
+            <Card
+              key={index}
+              uid={result?.uid}
+              name={result?.name}
+              earthAnimal={result?.earthAnimal}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="no-results">No results</div>
+      )}
+    </div>
+  );
+};
 
 export default SearchResults;

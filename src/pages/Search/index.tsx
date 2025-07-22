@@ -1,98 +1,89 @@
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 import SearchTop from '../../components/Search';
 import SearchResults from '../../components/Results';
-
-interface SearchPageProps {
-  params: object;
-}
+import useSearchQuery from '../../hooks/useSearchQuery';
 
 interface SearchResult {
+  uid: string;
   name: string;
   earthAnimal: string;
 }
 
-interface SearchPageState {
-  searchText: string;
-  results: SearchResult[];
-  loading: boolean;
-  error: string | null;
-}
+const SearchPage = () => {
+  const [searchText, setSearchText] = useSearchQuery(
+    'searchText',
+    localStorage.getItem('searchText') || ''
+  );
+  const [results, setResults] = useState<SearchResult[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
 
-class SearchPage extends Component<SearchPageProps, SearchPageState> {
-  constructor(props: SearchPageProps) {
-    super(props);
-    this.state = {
-      searchText: localStorage.getItem('searchText') || '',
-      results: [],
-      loading: false,
-      error: null,
-    };
-  }
-
-  componentDidMount() {
-    this.handleSearch(this.state.searchText);
-  }
-
-  handleSearch = (newSearchText: string) => {
-    const clearSearchText = newSearchText.trim();
-    localStorage.setItem('searchText', clearSearchText);
-
-    this.setState({ loading: true });
-
-    fetch(
-      `https://stapi.co/api/v1/rest/animal/search?name=${clearSearchText}`,
-      {
-        method: 'POST',
-      }
-    )
-      .then((response) => {
-        if (!response.ok) {
-          return response.json().then((errorData) => {
-            let errorMessage = errorData.message;
-
-            if (response.status >= 500) {
-              errorMessage = 'Server Error';
-            } else if (response.status >= 400) {
-              errorMessage = 'Not Found';
-            } else if (!errorMessage) {
-              errorMessage = 'Response was not ok';
-            }
-
-            this.setState({
-              loading: false,
-              error: errorMessage,
-            });
-            throw new Error(errorMessage);
-          });
-        }
-        return response.json();
-      })
-      .then(({ animals }) => {
-        this.setState({
-          searchText: clearSearchText,
-          results: animals,
-          loading: false,
-          error: null,
-        });
-      })
-      .catch((error) => {
-        this.setState({
-          loading: false,
-          error: error?.message || 'Something went wrong',
-        });
-      });
+  const handleSearchText = (param: string) => {
+    setSearchText(param);
   };
 
-  render() {
-    const { searchText, results, loading, error } = this.state;
+  const handleLoading = (param: boolean) => {
+    setLoading(param);
+  };
 
-    return (
-      <>
-        <SearchTop searchText={searchText} onSearch={this.handleSearch} />
-        <SearchResults loading={loading} results={results} error={error} />
-      </>
-    );
-  }
-}
+  const handleResults = (param: []) => {
+    setResults(param);
+  };
+  const handleError = (param: string) => {
+    setError(param);
+  };
+
+  useEffect(() => {
+    const handleSearch = (newSearchText: string) => {
+      const clearSearchText = newSearchText.trim();
+      localStorage.setItem('searchText', clearSearchText);
+      handleLoading(true);
+      handleError('');
+
+      fetch(
+        `https://stapi.co/api/v1/rest/animal/search?name=${clearSearchText}`,
+        {
+          method: 'POST',
+        }
+      )
+        .then((response) => {
+          if (!response.ok) {
+            return response.json().then((errorData) => {
+              let errorMessage = errorData.message;
+
+              if (response.status >= 500) {
+                errorMessage = 'Server Error';
+              } else if (response.status >= 400) {
+                errorMessage = 'Not Found';
+              } else if (!errorMessage) {
+                errorMessage = 'Response was not ok';
+              }
+              handleLoading(false);
+              handleError(errorMessage);
+              throw new Error(errorMessage);
+            });
+          }
+          return response.json();
+        })
+        .then(({ animals }) => {
+          handleResults(animals);
+          handleLoading(false);
+        })
+        .catch((error) => {
+          handleLoading(false);
+          handleError(error?.message || 'Something went wrong');
+        });
+    };
+
+    handleSearch(searchText);
+  }, [searchText]);
+
+  return (
+    <>
+      <SearchTop searchText={searchText} onSearch={handleSearchText} />
+      <SearchResults loading={loading} results={results} error={error} />
+    </>
+  );
+};
 
 export default SearchPage;

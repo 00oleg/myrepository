@@ -1,13 +1,16 @@
 import './App.css';
 import SearchPage from './pages/Search';
 import ErrorBoundary from './components/ErrorBoundary';
+import { BrowserRouter } from 'react-router-dom';
 
-function App() {
+const App = () => {
   return (
     <ErrorBoundary fallback={<p>ErrorBoundary: Something went wrong.</p>}>
-      <SearchPage params={{}} />
+      <BrowserRouter>
+        <SearchPage />
+      </BrowserRouter>
     </ErrorBoundary>
   );
-}
+};
 
 export default App;

@@ -1,22 +1,27 @@
-import { Component } from 'react';
-import type { SearchResultItem } from '../Results';
+import { Link } from 'react-router-dom';
 
-class SearchResultsCard extends Component<SearchResultItem> {
-  constructor(props: SearchResultItem) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  render() {
-    const { name, earthAnimal } = this.props;
-
-    return (
-      <li data-testid={'card-item'}>
-        <strong>{name || 'Undefined name'}</strong> -
-        <span>Earth Animal: {earthAnimal || false ? 'Yes' : 'No'}</span>
-      </li>
-    );
-  }
+interface SearchResultItem {
+  uid: string;
+  name: string;
+  earthAnimal: string;
+  pageNumber?: number;
 }
 
-export default SearchResultsCard;
+const Card = ({ uid, name, earthAnimal, pageNumber }: SearchResultItem) => {
+  return (
+    <div className="card-list__item" data-testid="card-list__item">
+      <Link
+        className="card-list__item-link"
+        to={`/details?page=${pageNumber}&detail=${uid}`}
+        data-testid="card-list__item-link"
+      >
+        <strong>{name || 'Undefined name'}</strong> -
+        <span data-testid="card-list__item-earth">
+          Earth Animal: {earthAnimal || false ? 'Yes' : 'No'}
+        </span>
+      </Link>
+    </div>
+  );
+};
+
+export default Card;
