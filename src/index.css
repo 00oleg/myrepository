@@ -155,3 +155,33 @@ input[type='text'] {
   background: #9ca1fd;
   color: #fff;
 }
+
+.search-page {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  padding: 0 50px;
+}
+
+.search-page__left {
+  width: 60%;
+}
+
+.search-page__right {
+  width: 40%;
+}
+
+.detail-page {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  padding: 30px 0 0 20px;
+  border-left: 2px solid #fff;
+}
+
+.detail-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.8);
+}

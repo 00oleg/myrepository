@@ -4,6 +4,7 @@ import SearchTop from '../../components/Search';
 import SearchResults from '../../components/Results';
 import useSearchQuery from '../../hooks/useSearchQuery';
 import PaginationResults from '../../components/Pagination';
+import { Outlet } from 'react-router-dom';
 
 interface SearchResult {
   uid: string;
@@ -107,21 +108,35 @@ const SearchPage = () => {
   }, [searchText, perPage, pageNumber]);
 
   useEffect(() => {
-    handlePageNumber(Number(searchParams.get('page') || 1));
+    console.log('calling useEffect for searchParams');
+
+    if (!searchParams.get('detail')) {
+      handlePageNumber(Number(searchParams.get('page') || 1));
+    }
   }, [searchParams]);
 
   return (
-    <div className="container-center">
-      <SearchTop searchText={searchText} onSearch={handleSearchText} />
-      <SearchResults loading={loading} results={results} error={error} />
-      {loading || !results.length ? null : (
-        <PaginationResults
+    <div className="search-page">
+      <div className="search-page__left">
+        <SearchTop searchText={searchText} onSearch={handleSearchText} />
+        <SearchResults
+          loading={loading}
+          results={results}
+          error={error}
           pageNumber={pageNumber}
-          totalPages={totalPages}
-          perPage={perPage}
-          handlePerPage={handlePerPage}
         />
-      )}
+        {loading || !results.length ? null : (
+          <PaginationResults
+            pageNumber={pageNumber}
+            totalPages={totalPages}
+            perPage={perPage}
+            handlePerPage={handlePerPage}
+          />
+        )}
+      </div>
+      <div className="search-page__right">
+        <Outlet />
+      </div>
     </div>
   );
 };

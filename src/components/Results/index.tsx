@@ -12,9 +12,15 @@ interface SearchResultsProps {
   results: SearchResultItem[];
   loading: boolean;
   error: string;
+  pageNumber: number;
 }
 
-const SearchResults = ({ loading, results, error }: SearchResultsProps) => {
+const SearchResults = ({
+  loading,
+  results,
+  error,
+  pageNumber,
+}: SearchResultsProps) => {
   const [hasError, setHasError] = useState(false);
 
   const handleHasError = () => {
@@ -55,6 +61,7 @@ const SearchResults = ({ loading, results, error }: SearchResultsProps) => {
               uid={result?.uid}
               name={result?.name}
               earthAnimal={result?.earthAnimal}
+              pageNumber={pageNumber}
             />
           ))}
         </div>
