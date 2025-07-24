@@ -6,6 +6,7 @@ import '@testing-library/jest-dom';
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import App from '../App';
+import { MemoryRouter } from 'react-router';
 
 beforeEach(() => {
   (window.fetch as jest.Mock) = jest.fn();
@@ -13,13 +14,18 @@ beforeEach(() => {
 });
 
 it('makes initial API call on component mount', async () => {
-  (window.fetch as jest.Mock).mockResolvedValueOnce({
+  (window.fetch as jest.Mock).mockResolvedValue({
     ok: true,
     json: async () => ({
       animals: [{ name: 'Test name', earthAnimal: 'true' }],
+      page: { totalPages: 1 },
     }),
   });
-  render(<App />);
+  render(
+    <MemoryRouter initialEntries={['/']}>
+      <App />
+    </MemoryRouter>
+  );
   await waitFor(() => {
     expect(window.fetch).toHaveBeenCalled();
     expect(screen.getByText('Test name')).toBeInTheDocument();
@@ -32,9 +38,14 @@ it('handles search term from localStorage on initial load', async () => {
     ok: true,
     json: async () => ({
       animals: [{ name: 'Test name', earthAnimal: 'true' }],
+      page: { totalPages: 1 },
     }),
   });
-  render(<App />);
+  render(
+    <MemoryRouter initialEntries={['/']}>
+      <App />
+    </MemoryRouter>
+  );
   await waitFor(() => {
     expect(screen.getByDisplayValue('Test name')).toBeInTheDocument();
     expect(screen.getByText('Test name')).toBeInTheDocument();
@@ -44,9 +55,13 @@ it('handles search term from localStorage on initial load', async () => {
 it('manages loading states during API calls', async () => {
   (window.fetch as jest.Mock).mockResolvedValueOnce({
     ok: true,
-    json: async () => ({ animals: [] }),
+    json: async () => ({ animals: [], page: { totalPages: 1 } }),
   });
-  render(<App />);
+  render(
+    <MemoryRouter initialEntries={['/']}>
+      <App />
+    </MemoryRouter>
+  );
   expect(screen.getByText(/Loading.../i)).toBeInTheDocument();
   await waitFor(() => {
     expect(screen.queryByText(/Loading.../i)).not.toBeInTheDocument();
@@ -58,10 +73,15 @@ it('calls API with correct parameters', async () => {
     ok: true,
     json: async () => ({
       animals: [],
+      page: { totalPages: 1 },
     }),
   });
   localStorage.setItem('searchText', 'Test');
-  render(<App />);
+  render(
+    <MemoryRouter initialEntries={['/']}>
+      <App />
+    </MemoryRouter>
+  );
   await waitFor(() => {
     expect(window.fetch).toHaveBeenCalledWith(
       expect.stringContaining('Test'),
@@ -75,9 +95,14 @@ it('handles successful API responses', async () => {
     ok: true,
     json: async () => ({
       animals: [{ name: 'Test animal name', earthAnimal: 'true' }],
+      page: { totalPages: 1 },
     }),
   });
-  render(<App />);
+  render(
+    <MemoryRouter initialEntries={['/']}>
+      <App />
+    </MemoryRouter>
+  );
   await waitFor(() => {
     expect(screen.getByText('Test animal name')).toBeInTheDocument();
   });
@@ -89,7 +114,11 @@ it('handles API error responses', async () => {
     status: 500,
     json: async () => ({ message: 'Server Error' }),
   });
-  render(<App />);
+  render(
+    <MemoryRouter initialEntries={['/']}>
+      <App />
+    </MemoryRouter>
+  );
   await waitFor(() => {
     expect(screen.getByText(/Server Error/i)).toBeInTheDocument();
   });
@@ -100,9 +129,14 @@ it('updates component state based on API responses', async () => {
     ok: true,
     json: async () => ({
       animals: [{ name: 'Test animal name', earthAnimal: 'true' }],
+      page: { totalPages: 1 },
     }),
   });
-  render(<App />);
+  render(
+    <MemoryRouter initialEntries={['/']}>
+      <App />
+    </MemoryRouter>
+  );
   await waitFor(() => {
     expect(screen.getByText('Test animal name')).toBeInTheDocument();
   });
@@ -113,10 +147,15 @@ it('manages search term state correctly', async () => {
     ok: false,
     json: async () => ({
       animals: [],
+      page: { totalPages: 1 },
     }),
   });
 
-  render(<App />);
+  render(
+    <MemoryRouter initialEntries={['/']}>
+      <App />
+    </MemoryRouter>
+  );
   fireEvent.change(screen.getByTestId('search-input'), {
     target: { value: 'Test animal name' },
   });

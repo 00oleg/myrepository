@@ -39,6 +39,7 @@ const PaginationResults = ({
           return (
             <div
               key={el}
+              data-testid={`pagination-per-page-${page}`}
               className={`pagination-result__item${page === perPage ? ' current' : ''}`}
               onClick={() => handlePerPage(page)}
             >

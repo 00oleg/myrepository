@@ -3,10 +3,13 @@
  */
 
 import '@testing-library/jest-dom';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import SearchTop from '../components/Search';
+import SearchPage from '../pages/Search';
+import { MemoryRouter } from 'react-router';
 
 beforeEach(() => {
+  window.fetch = jest.fn();
   localStorage.clear();
 });
 
@@ -18,14 +21,26 @@ it('renders search input and search button', () => {
   expect(getByTestId('search-button')).toBeInTheDocument();
 });
 
-it('displays previously saved search term from localStorage on mount', () => {
+it('displays previously saved search term from localStorage on mount', async () => {
   localStorage.setItem('searchText', 'saved text query');
 
+  global.fetch = jest.fn().mockResolvedValue({
+    ok: true,
+    json: async () => ({
+      animals: [{ name: 'Test animal name', earthAnimal: 'true' }],
+      page: { totalPages: 1 },
+    }),
+  });
+
   const { getByTestId } = render(
-    <SearchTop searchText="" onSearch={jest.fn()} />
+    <MemoryRouter initialEntries={['/']}>
+      <SearchPage />
+    </MemoryRouter>
   );
 
-  expect(getByTestId('search-input')).toHaveValue('saved text query');
+  await waitFor(() => {
+    expect(getByTestId('search-input')).toHaveValue('saved text query');
+  });
 });
 
 it('shows empty input when no saved term exists', () => {
@@ -44,26 +59,52 @@ it('updates input value when user types', () => {
   expect(input).toHaveValue('text query');
 });
 
-it('saves search term to localStorage when search button is clicked', () => {
+it('saves search term to localStorage when search button is clicked', async () => {
+  global.fetch = jest.fn().mockResolvedValue({
+    ok: true,
+    json: async () => ({
+      animals: [{ name: 'Test animal name', earthAnimal: 'true' }],
+      page: { totalPages: 1 },
+    }),
+  });
+
   const { getByTestId } = render(
-    <SearchTop searchText="" onSearch={jest.fn()} />
+    <MemoryRouter initialEntries={['/']}>
+      <SearchPage />
+    </MemoryRouter>
   );
   const input = getByTestId('search-input');
   const button = getByTestId('search-button');
   fireEvent.change(input, { target: { value: 'text query' } });
   fireEvent.click(button);
-  expect(localStorage.getItem('searchText')).toBe('text query');
+
+  await waitFor(() => {
+    expect(localStorage.getItem('searchText')).toBe('text query');
+  });
 });
 
-it('trims whitespace from search input before saving', () => {
+it('trims whitespace from search input before saving', async () => {
+  global.fetch = jest.fn().mockResolvedValue({
+    ok: true,
+    json: async () => ({
+      animals: [{ name: 'Test animal name', earthAnimal: 'true' }],
+      page: { totalPages: 1 },
+    }),
+  });
+
   const { getByTestId } = render(
-    <SearchTop searchText="" onSearch={jest.fn()} />
+    <MemoryRouter initialEntries={['/']}>
+      <SearchPage />
+    </MemoryRouter>
   );
   const input = getByTestId('search-input');
   const button = getByTestId('search-button');
   fireEvent.change(input, { target: { value: '   spaced text   ' } });
   fireEvent.click(button);
-  expect(localStorage.getItem('searchText')).toBe('spaced text');
+
+  await waitFor(() => {
+    expect(localStorage.getItem('searchText')).toBe('spaced text');
+  });
 });
 
 it('triggers search callback with correct parameters', () => {
@@ -78,22 +119,47 @@ it('triggers search callback with correct parameters', () => {
   expect(onSearchMock).toHaveBeenCalledWith('callback test');
 });
 
-it('retrieves saved search term on component mount', () => {
+it('retrieves saved search term on component mount', async () => {
+  global.fetch = jest.fn().mockResolvedValue({
+    ok: true,
+    json: async () => ({
+      animals: [{ name: 'Test animal name', earthAnimal: 'true' }],
+      page: { totalPages: 1 },
+    }),
+  });
   localStorage.setItem('searchText', 'persisted value');
+
   const { getByTestId } = render(
-    <SearchTop searchText="" onSearch={jest.fn()} />
+    <MemoryRouter initialEntries={['/']}>
+      <SearchPage />
+    </MemoryRouter>
   );
-  expect(getByTestId('search-input')).toHaveValue('persisted value');
+
+  await waitFor(() => {
+    expect(getByTestId('search-input')).toHaveValue('persisted value');
+  });
 });
 
-it('overwrites existing localStorage value when new search is performed', () => {
+it('overwrites existing localStorage value when new search is performed', async () => {
+  global.fetch = jest.fn().mockResolvedValue({
+    ok: true,
+    json: async () => ({
+      animals: [{ name: 'Test animal name', earthAnimal: 'true' }],
+      page: { totalPages: 1 },
+    }),
+  });
   localStorage.setItem('searchText', 'old localStorage value');
   const { getByTestId } = render(
-    <SearchTop searchText="" onSearch={jest.fn()} />
+    <MemoryRouter initialEntries={['/']}>
+      <SearchPage />
+    </MemoryRouter>
   );
   const input = getByTestId('search-input');
   const button = getByTestId('search-button');
   fireEvent.change(input, { target: { value: 'new value' } });
   fireEvent.click(button);
-  expect(localStorage.getItem('searchText')).toBe('new value');
+
+  await waitFor(() => {
+    expect(localStorage.getItem('searchText')).toBe('new value');
+  });
 });

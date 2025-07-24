@@ -107,8 +107,6 @@ const SearchPage = () => {
   }, [searchText, perPage, pageNumber]);
 
   useEffect(() => {
-    console.log('calling useEffect for searchParams');
-
     if (!searchParams.get('detail')) {
       handlePageNumber(Number(searchParams.get('page') || 1));
     }

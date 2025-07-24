@@ -5,32 +5,60 @@
 import '@testing-library/jest-dom';
 
 import { render, screen, waitFor } from '@testing-library/react';
-import SearchResults, { type SearchResultItem } from '../components/Results';
+import SearchResults from '../components/Results';
 import SearchPage from '../pages/Search';
+import type { SearchResultItem } from 'components/Card';
+import { MemoryRouter } from 'react-router';
 
 const mockData: SearchResultItem[] = [
-  { name: 'name 1', earthAnimal: 'true' },
-  { name: 'name 2', earthAnimal: '' },
+  { uid: '1', name: 'name 1', earthAnimal: 'true' },
+  { uid: '2', name: 'name 2', earthAnimal: '' },
 ];
 
 it('renders correct number of items when data is provided', () => {
-  render(<SearchResults loading={false} results={mockData} error={null} />);
+  render(
+    <MemoryRouter initialEntries={['/']}>
+      <SearchResults
+        loading={false}
+        results={mockData}
+        error={null}
+        pageNumber={1}
+      />
+    </MemoryRouter>
+  );
   const items = screen.getAllByTestId('card-item');
   expect(items.length).toBe(mockData.length);
 });
 
 it('displays "no results" message when data array is empty', () => {
-  render(<SearchResults loading={false} results={[]} error={null} />);
+  render(
+    <MemoryRouter initialEntries={['/']}>
+      <SearchResults loading={false} results={[]} error={null} pageNumber={1} />
+    </MemoryRouter>
+  );
   expect(screen.getByText(/No results/i)).toBeInTheDocument();
 });
 
 it('shows loading state while fetching data', () => {
-  render(<SearchResults loading={true} results={[]} error={null} />);
+  render(
+    <MemoryRouter initialEntries={['/']}>
+      <SearchResults loading={true} results={[]} error={null} pageNumber={1} />
+    </MemoryRouter>
+  );
   expect(screen.getByText(/Loading.../i)).toBeInTheDocument();
 });
 
 it('correctly displays item names and descriptions', () => {
-  render(<SearchResults loading={false} results={mockData} error={null} />);
+  render(
+    <MemoryRouter initialEntries={['/']}>
+      <SearchResults
+        loading={false}
+        results={mockData}
+        error={null}
+        pageNumber={1}
+      />
+    </MemoryRouter>
+  );
   expect(screen.getByText('name 1')).toBeInTheDocument();
   expect(screen.getByText('name 1')).toBeInTheDocument();
   expect(screen.getByText('Earth Animal: Yes')).toBeInTheDocument();
@@ -39,10 +67,19 @@ it('correctly displays item names and descriptions', () => {
 
 it('handles missing or undefined data gracefully', () => {
   const data: SearchResultItem[] = [
-    { name: '', earthAnimal: '' },
-    { name: '', earthAnimal: '' },
+    { uid: '1', name: '', earthAnimal: '' },
+    { uid: '2', name: '', earthAnimal: '' },
   ];
-  render(<SearchResults loading={false} results={data} error={null} />);
+  render(
+    <MemoryRouter initialEntries={['/']}>
+      <SearchResults
+        loading={false}
+        results={data}
+        error={null}
+        pageNumber={1}
+      />
+    </MemoryRouter>
+  );
   expect(screen.getAllByTestId('card-item').length).toBe(data.length);
 });
 
@@ -61,7 +98,11 @@ describe('SearchPage', () => {
       }),
     });
     localStorage.setItem('searchText', 'saved text query');
-    render(<SearchPage params={{}} />);
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <SearchPage />
+      </MemoryRouter>
+    );
     await waitFor(() => {
       expect(screen.getByText('Network error')).toBeInTheDocument();
     });
@@ -77,7 +118,11 @@ describe('SearchPage', () => {
       }),
     });
     localStorage.setItem('searchText', 'saved text query');
-    render(<SearchPage params={{}} />);
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <SearchPage />
+      </MemoryRouter>
+    );
     await waitFor(() => {
       expect(screen.getByText('Not Found')).toBeInTheDocument();
     });
@@ -93,7 +138,11 @@ describe('SearchPage', () => {
       }),
     });
     localStorage.setItem('searchText', 'saved text query');
-    render(<SearchPage params={{}} />);
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <SearchPage />
+      </MemoryRouter>
+    );
     await waitFor(() => {
       expect(screen.getByText('Server Error')).toBeInTheDocument();
     });

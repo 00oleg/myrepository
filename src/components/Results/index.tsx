@@ -1,17 +1,11 @@
 import { useState } from 'react';
 import Loading from '../Loading';
-import Card from '../Card';
-
-interface SearchResultItem {
-  name: string;
-  earthAnimal: string;
-  uid: string;
-}
+import Card, { type SearchResultItem } from '../Card';
 
 interface SearchResultsProps {
   results: SearchResultItem[];
   loading: boolean;
-  error: string;
+  error: string | null;
   pageNumber: number;
 }
 

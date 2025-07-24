@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router';
 
-interface SearchResultItem {
+export interface SearchResultItem {
   uid: string;
   name: string;
   earthAnimal: string;
@@ -9,7 +9,7 @@ interface SearchResultItem {
 
 const Card = ({ uid, name, earthAnimal, pageNumber }: SearchResultItem) => {
   return (
-    <div className="card-list__item" data-testid="card-list__item">
+    <div className="card-list__item" data-testid="card-item">
       <NavLink
         className="card-list__item-link"
         to={`/details?page=${pageNumber}&detail=${uid}`}

@@ -89,7 +89,11 @@ const DetailPage = () => {
   return (
     <>
       <div className="detail-page">
-        <button ref={buttonRef} onClick={onDismiss}>
+        <button
+          data-testid={'close-button'}
+          ref={buttonRef}
+          onClick={onDismiss}
+        >
           Close
         </button>
 
