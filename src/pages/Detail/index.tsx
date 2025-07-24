@@ -1,6 +1,6 @@
 import Loading from '../../components/Loading';
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router';
 
 const names = {
   uid: 'UID',

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router';
 import getArryByNumber from '../../utils/getArryByNumber';
 
 interface PaginationResultsProps {
@@ -20,13 +20,13 @@ const PaginationResults = ({
         <div className="pagination-result__title">Page:</div>
         {getArryByNumber(totalPages).map((el: number) => {
           return (
-            <Link
+            <NavLink
               key={el}
               className={`pagination-result__item${pageNumber - 1 === el ? ' current' : ''}`}
               to={`?page=${el + 1}`}
             >
               {el + 1}
-            </Link>
+            </NavLink>
           );
         })}
       </div>

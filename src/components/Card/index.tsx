@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router';
 
 interface SearchResultItem {
   uid: string;
@@ -10,7 +10,7 @@ interface SearchResultItem {
 const Card = ({ uid, name, earthAnimal, pageNumber }: SearchResultItem) => {
   return (
     <div className="card-list__item" data-testid="card-list__item">
-      <Link
+      <NavLink
         className="card-list__item-link"
         to={`/details?page=${pageNumber}&detail=${uid}`}
         data-testid="card-list__item-link"
@@ -19,7 +19,7 @@ const Card = ({ uid, name, earthAnimal, pageNumber }: SearchResultItem) => {
         <span data-testid="card-list__item-earth">
           Earth Animal: {earthAnimal || false ? 'Yes' : 'No'}
         </span>
-      </Link>
+      </NavLink>
     </div>
   );
 };

@@ -6,16 +6,13 @@ interface SearchInputProps {
 }
 
 const SearchTop = ({ searchText, onSearch }: SearchInputProps) => {
-  const [searchInput, setSearchInput] = useState<string>(
-    searchText || localStorage.getItem('searchText') || ''
-  );
+  const [searchInput, setSearchInput] = useState<string>(searchText || '');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(event.target.value.trim());
   };
 
   const handleSearch = () => {
-    localStorage.setItem('searchText', searchInput);
     onSearch(searchInput);
   };
 

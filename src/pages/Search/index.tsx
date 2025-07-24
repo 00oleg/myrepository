@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Outlet } from 'react-router';
 import SearchTop from '../../components/Search';
 import SearchResults from '../../components/Results';
 import useSearchQuery from '../../hooks/useSearchQuery';
 import PaginationResults from '../../components/Pagination';
-import { Outlet } from 'react-router-dom';
 
 interface SearchResult {
   uid: string;
