@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Loading from '../Loading';
 import Card, { type SearchResultItem } from '../Card';
 
@@ -15,16 +14,6 @@ const SearchResults = ({
   error,
   pageNumber,
 }: SearchResultsProps) => {
-  const [hasError, setHasError] = useState(false);
-
-  const handleHasError = () => {
-    setHasError(true);
-  };
-
-  if (hasError) {
-    throw new Error('Error in event handler');
-  }
-
   if (error) {
     return (
       <div className="search-result">
@@ -41,12 +30,7 @@ const SearchResults = ({
 
   return (
     <div className="search-result">
-      <h2>
-        Search Star Trek Animals
-        <button className="btn-error" onClick={handleHasError}>
-          Get Error
-        </button>
-      </h2>
+      <h2>Search Star Trek Animals</h2>
       {results.length ? (
         <div>
           {results.map((result, index) => (

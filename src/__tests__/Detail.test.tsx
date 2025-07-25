@@ -70,4 +70,47 @@ describe('DetailedCard', () => {
       expect(container.querySelector('.detail-page')).not.toBeInTheDocument();
     });
   });
+
+  it('DetailedCard component show error message', async () => {
+    global.fetch = mockFetch.mockResolvedValue({
+      ok: false,
+      json: () =>
+        Promise.resolve({
+          animal: {},
+        }),
+    } as Response);
+
+    const { getByText } = render(
+      <MemoryRouter initialEntries={['/details?page=1&detail=ANMA0000264633']}>
+        <Routes>
+          <Route path="/" element={<div />} />
+          <Route path="details" element={<DetailPage />} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(getByText('Response was not ok')).toBeInTheDocument();
+    });
+  });
+
+  it('DetailedCard component show error message if no animal found', async () => {
+    global.fetch = mockFetch.mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({}),
+    } as Response);
+
+    const { getByText } = render(
+      <MemoryRouter initialEntries={['/details?page=1&detail=ANMA0000264633']}>
+        <Routes>
+          <Route path="/" element={<div />} />
+          <Route path="details" element={<DetailPage />} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    await waitFor(() => {
+      expect(getByText('Animal not found')).toBeInTheDocument();
+    });
+  });
 });

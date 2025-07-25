@@ -84,8 +84,6 @@ const SearchPage = () => {
             } else if (!errorMessage) {
               errorMessage = 'Response was not ok';
             }
-            handleLoading(false);
-            handleError(errorMessage);
             throw new Error(errorMessage);
           });
         }
@@ -98,6 +96,8 @@ const SearchPage = () => {
       })
       .catch((error) => {
         handleLoading(false);
+        handleTotalPages(1);
+        handleResults([]);
         handleError(error?.message || 'Something went wrong');
       });
   };

@@ -7,6 +7,7 @@ import '@testing-library/jest-dom';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import App from '../App';
 import { MemoryRouter } from 'react-router';
+import Page404 from '../pages/404';
 
 beforeEach(() => {
   (window.fetch as jest.Mock) = jest.fn();
@@ -162,5 +163,12 @@ it('manages search term state correctly', async () => {
 
   await waitFor(() => {
     expect(screen.getByDisplayValue('Test animal name')).toBeInTheDocument();
+  });
+});
+
+describe('Page 404', () => {
+  it('renders 404 information', () => {
+    render(<Page404 />);
+    expect(screen.getByText(/Page not found 404/i)).toBeInTheDocument();
   });
 });
