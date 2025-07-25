@@ -90,6 +90,7 @@ const DetailPage = () => {
     <>
       <div className="detail-page">
         <button
+          className="close-button"
           data-testid={'close-button'}
           ref={buttonRef}
           onClick={onDismiss}
