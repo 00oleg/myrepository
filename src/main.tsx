@@ -4,6 +4,7 @@ import './index.css';
 import App from './App.tsx';
 import { BrowserRouter } from 'react-router';
 import ErrorBoundary from './components/ErrorBoundary/index.tsx';
+import { ThemeProvider } from './ThemeContext.tsx';
 
 const root = document.getElementById('root');
 if (!root) {
@@ -14,7 +15,9 @@ createRoot(root).render(
   <StrictMode>
     <BrowserRouter>
       <ErrorBoundary fallback={<p>ErrorBoundary: Something went wrong.</p>}>
-        <App />
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
       </ErrorBoundary>
     </BrowserRouter>
   </StrictMode>

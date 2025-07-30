@@ -3,10 +3,6 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -18,10 +14,19 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+}
+
+#root {
+  height: 100%;
 }
 
 a {
@@ -46,9 +51,10 @@ button {
   font-size: 16px;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #bdbdbd;
   cursor: pointer;
   transition: border-color 0.25s;
+  color: inherit;
 }
 button:hover {
   border-color: #646cff;
@@ -71,6 +77,20 @@ input[type='text'] {
   max-width: 900px;
   padding: 15px;
   margin: 0 auto;
+}
+
+.app {
+  --bg-color: rgb(23, 23, 23);
+  --txt-color: white;
+
+  height: 100%;
+  background: var(--bg-color);
+  color: var(--txt-color);
+}
+
+.app.light {
+  --bg-color: white;
+  --txt-color: black;
 }
 
 .search-form {
@@ -111,7 +131,6 @@ input[type='text'] {
   min-width: 300px;
   padding: 10px;
   background-color: #9ca1fd;
-  color: #fff;
   border-radius: 10px;
 }
 
@@ -142,18 +161,15 @@ input[type='text'] {
   padding: 5px;
   text-align: center;
   border: 1px solid #ddd;
-  color: #fff;
   cursor: pointer;
 }
 
 .pagination-result__item:hover {
   background: #343dee;
-  color: #fff;
 }
 
 .pagination-result__item.current {
   background: #9ca1fd;
-  color: #fff;
 }
 
 .search-page {
@@ -172,7 +188,7 @@ input[type='text'] {
 }
 
 .close-button {
-  background-color: #000;
+  background-color: #626262;
 }
 
 .detail-page {
@@ -213,8 +229,11 @@ input[type='text'] {
 }
 
 .navbar {
-  background: #222;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 0.5rem 1.5rem;
+  border-bottom: 1px solid #bdbdbd;
 }
 
 .navbar-list {
@@ -226,7 +245,6 @@ input[type='text'] {
 }
 
 .navbar-link {
-  color: #fff;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s;
