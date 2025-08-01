@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router';
+import { useSelectedItemsStore } from '../../store/selectedItemsStore';
 
 export interface SearchResultItem {
   uid: string;
@@ -8,8 +9,20 @@ export interface SearchResultItem {
 }
 
 const Card = ({ uid, name, earthAnimal, pageNumber }: SearchResultItem) => {
+  const { toggleItem, isSelected } = useSelectedItemsStore();
+
+  const handleCheckboxChange = (value: string) => {
+    toggleItem(value);
+  };
+
   return (
     <div className="card-list__item" data-testid="card-item">
+      <input
+        type="checkbox"
+        value={uid}
+        onChange={() => handleCheckboxChange(uid)}
+        checked={isSelected(uid)}
+      />
       <NavLink
         className="card-list__item-link"
         to={`/details?page=${pageNumber}&detail=${uid}`}

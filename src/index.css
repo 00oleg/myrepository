@@ -187,6 +187,10 @@ input[type='text'] {
   width: 40%;
 }
 
+.card-list__item {
+  margin-bottom: 10px;
+}
+
 .close-button {
   background-color: #626262;
 }
@@ -252,4 +256,22 @@ input[type='text'] {
 
 .navbar-link:hover {
   color: #343dee;
+}
+
+input[type='checkbox'] {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  margin: 0 10px 0 0;
+}
+
+input[type='checkbox']::before {
+  content: '';
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+}
+
+input[type='checkbox']:checked::before {
+  transform: scale(1);
 }
