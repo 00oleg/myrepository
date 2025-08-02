@@ -1,27 +1,42 @@
 import { create } from 'zustand';
 
+export interface SelectedItem {
+  uid: string;
+  name: string;
+  earthAnimal: string;
+}
+
 interface SelectedItemsState {
-  selectedItems: Set<string>;
-  toggleItem: (uid: string) => void;
+  selectedItems: Record<string, SelectedItem>;
+  toggleItem: (item: SelectedItem) => void;
   clearAll: () => void;
   isSelected: (uid: string) => boolean;
+  getSelectedItems: () => SelectedItem[];
+  getSelectedItemsCount: () => number;
 }
 
 export const useSelectedItemsStore = create<SelectedItemsState>((set, get) => ({
-  selectedItems: new Set<string>(),
-  toggleItem: (uid: string) =>
+  selectedItems: {},
+
+  toggleItem: (item: SelectedItem) =>
     set((state) => {
-      const newSet = new Set(state.selectedItems);
-      if (newSet.has(uid)) {
-        newSet.delete(uid);
+      const newItems = { ...state.selectedItems };
+      if (newItems[item.uid]) {
+        delete newItems[item.uid];
       } else {
-        newSet.add(uid);
+        newItems[item.uid] = item;
       }
-      return { selectedItems: newSet };
+      return { selectedItems: newItems };
     }),
+
   clearAll: () =>
     set(() => ({
-      selectedItems: new Set<string>(),
+      selectedItems: {},
     })),
-  isSelected: (uid: string) => get().selectedItems.has(uid),
+
+  isSelected: (uid: string) => Boolean(get().selectedItems[uid]),
+
+  getSelectedItems: () => Object.values(get().selectedItems),
+
+  getSelectedItemsCount: () => Object.keys(get().selectedItems).length,
 }));

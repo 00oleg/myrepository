@@ -4,6 +4,7 @@ import SearchTop from '../../components/Search';
 import SearchResults from '../../components/Results';
 import useSearchQuery from '../../hooks/useSearchQuery';
 import PaginationResults from '../../components/Pagination';
+import ResultActions from '../../components/ResultActions';
 
 interface SearchResult {
   uid: string;
@@ -130,6 +131,8 @@ const SearchPage = () => {
             handlePerPage={handlePerPage}
           />
         )}
+
+        <ResultActions />
       </div>
       <div className="search-page__right">
         <Outlet />

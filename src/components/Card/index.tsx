@@ -11,8 +11,8 @@ export interface SearchResultItem {
 const Card = ({ uid, name, earthAnimal, pageNumber }: SearchResultItem) => {
   const { toggleItem, isSelected } = useSelectedItemsStore();
 
-  const handleCheckboxChange = (value: string) => {
-    toggleItem(value);
+  const handleCheckboxChange = () => {
+    toggleItem({ uid, name, earthAnimal });
   };
 
   return (
@@ -20,7 +20,7 @@ const Card = ({ uid, name, earthAnimal, pageNumber }: SearchResultItem) => {
       <input
         type="checkbox"
         value={uid}
-        onChange={() => handleCheckboxChange(uid)}
+        onChange={() => handleCheckboxChange()}
         checked={isSelected(uid)}
       />
       <NavLink
