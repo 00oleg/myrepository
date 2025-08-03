@@ -8,6 +8,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import App from '../App';
 import { MemoryRouter } from 'react-router';
 import Page404 from '../pages/404';
+import { ThemeProvider } from '../ThemeContext';
 
 beforeEach(() => {
   (window.fetch as jest.Mock) = jest.fn();
@@ -24,7 +25,9 @@ it('makes initial API call on component mount', async () => {
   });
   render(
     <MemoryRouter initialEntries={['/']}>
-      <App />
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </MemoryRouter>
   );
   await waitFor(() => {
@@ -44,7 +47,9 @@ it('handles search term from localStorage on initial load', async () => {
   });
   render(
     <MemoryRouter initialEntries={['/']}>
-      <App />
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </MemoryRouter>
   );
   await waitFor(() => {
@@ -60,7 +65,9 @@ it('manages loading states during API calls', async () => {
   });
   render(
     <MemoryRouter initialEntries={['/']}>
-      <App />
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </MemoryRouter>
   );
   expect(screen.getByText(/Loading.../i)).toBeInTheDocument();
@@ -80,7 +87,9 @@ it('calls API with correct parameters', async () => {
   localStorage.setItem('searchText', 'Test');
   render(
     <MemoryRouter initialEntries={['/']}>
-      <App />
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </MemoryRouter>
   );
   await waitFor(() => {
@@ -101,7 +110,9 @@ it('handles successful API responses', async () => {
   });
   render(
     <MemoryRouter initialEntries={['/']}>
-      <App />
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </MemoryRouter>
   );
   await waitFor(() => {
@@ -117,7 +128,9 @@ it('handles API error responses', async () => {
   });
   render(
     <MemoryRouter initialEntries={['/']}>
-      <App />
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </MemoryRouter>
   );
   await waitFor(() => {
@@ -135,7 +148,9 @@ it('updates component state based on API responses', async () => {
   });
   render(
     <MemoryRouter initialEntries={['/']}>
-      <App />
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </MemoryRouter>
   );
   await waitFor(() => {
@@ -154,7 +169,9 @@ it('manages search term state correctly', async () => {
 
   render(
     <MemoryRouter initialEntries={['/']}>
-      <App />
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </MemoryRouter>
   );
   fireEvent.change(screen.getByTestId('search-input'), {
