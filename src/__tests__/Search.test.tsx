@@ -7,6 +7,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import SearchTop from '../components/Search';
 import SearchPage from '../pages/Search';
 import { MemoryRouter } from 'react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 beforeEach(() => {
   window.fetch = jest.fn();
@@ -15,7 +16,7 @@ beforeEach(() => {
 
 it('renders search input and search button', () => {
   const { getByTestId } = render(
-    <SearchTop searchText="" onSearch={jest.fn()} />
+    <SearchTop searchText="" onSearch={jest.fn()} refresh={jest.fn()} />
   );
   expect(getByTestId('search-input')).toBeInTheDocument();
   expect(getByTestId('search-button')).toBeInTheDocument();
@@ -31,11 +32,20 @@ it('displays previously saved search term from localStorage on mount', async () 
       page: { totalPages: 1 },
     }),
   });
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
 
   const { getByTestId } = render(
-    <MemoryRouter initialEntries={['/']}>
-      <SearchPage />
-    </MemoryRouter>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={['/']}>
+        <SearchPage />
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 
   await waitFor(() => {
@@ -45,14 +55,14 @@ it('displays previously saved search term from localStorage on mount', async () 
 
 it('shows empty input when no saved term exists', () => {
   const { getByTestId } = render(
-    <SearchTop searchText="" onSearch={jest.fn()} />
+    <SearchTop searchText="" onSearch={jest.fn()} refresh={jest.fn()} />
   );
   expect(getByTestId('search-input')).toHaveValue('');
 });
 
 it('updates input value when user types', () => {
   const { getByTestId } = render(
-    <SearchTop searchText="" onSearch={jest.fn()} />
+    <SearchTop searchText="" onSearch={jest.fn()} refresh={jest.fn()} />
   );
   const input = getByTestId('search-input');
   fireEvent.change(input, { target: { value: 'text query' } });
@@ -67,11 +77,20 @@ it('saves search term to localStorage when search button is clicked', async () =
       page: { totalPages: 1 },
     }),
   });
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
 
   const { getByTestId } = render(
-    <MemoryRouter initialEntries={['/']}>
-      <SearchPage />
-    </MemoryRouter>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={['/']}>
+        <SearchPage />
+      </MemoryRouter>
+    </QueryClientProvider>
   );
   const input = getByTestId('search-input');
   const button = getByTestId('search-button');
@@ -91,11 +110,20 @@ it('trims whitespace from search input before saving', async () => {
       page: { totalPages: 1 },
     }),
   });
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
 
   const { getByTestId } = render(
-    <MemoryRouter initialEntries={['/']}>
-      <SearchPage />
-    </MemoryRouter>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={['/']}>
+        <SearchPage />
+      </MemoryRouter>
+    </QueryClientProvider>
   );
   const input = getByTestId('search-input');
   const button = getByTestId('search-button');
@@ -110,7 +138,7 @@ it('trims whitespace from search input before saving', async () => {
 it('triggers search callback with correct parameters', () => {
   const onSearchMock = jest.fn();
   const { getByTestId } = render(
-    <SearchTop searchText="" onSearch={onSearchMock} />
+    <SearchTop searchText="" onSearch={onSearchMock} refresh={jest.fn()} />
   );
   const input = getByTestId('search-input');
   const button = getByTestId('search-button');
@@ -127,12 +155,21 @@ it('retrieves saved search term on component mount', async () => {
       page: { totalPages: 1 },
     }),
   });
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
   localStorage.setItem('searchText', 'persisted value');
 
   const { getByTestId } = render(
-    <MemoryRouter initialEntries={['/']}>
-      <SearchPage />
-    </MemoryRouter>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={['/']}>
+        <SearchPage />
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 
   await waitFor(() => {
@@ -148,11 +185,20 @@ it('overwrites existing localStorage value when new search is performed', async 
       page: { totalPages: 1 },
     }),
   });
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
   localStorage.setItem('searchText', 'old localStorage value');
   const { getByTestId } = render(
-    <MemoryRouter initialEntries={['/']}>
-      <SearchPage />
-    </MemoryRouter>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={['/']}>
+        <SearchPage />
+      </MemoryRouter>
+    </QueryClientProvider>
   );
   const input = getByTestId('search-input');
   const button = getByTestId('search-button');

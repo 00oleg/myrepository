@@ -6,6 +6,7 @@ import '@testing-library/jest-dom';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import DetailPage from '../pages/Detail';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 describe('DetailedCard', () => {
   const mockFetch = jest.fn();
@@ -29,10 +30,19 @@ describe('DetailedCard', () => {
   });
 
   it('DetailedCard component a loading indicator is displayed while fetching data', async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
     render(
-      <MemoryRouter initialEntries={['/']}>
-        <DetailPage />
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter initialEntries={['/']}>
+          <DetailPage />
+        </MemoryRouter>
+      </QueryClientProvider>
     );
 
     await waitFor(() => {
@@ -41,10 +51,20 @@ describe('DetailedCard', () => {
   });
 
   it('DetailedCard component correctly displays the detailed card data', async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+
     const { getByText } = render(
-      <MemoryRouter initialEntries={['/']}>
-        <DetailPage />
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter initialEntries={['/']}>
+          <DetailPage />
+        </MemoryRouter>
+      </QueryClientProvider>
     );
 
     await waitFor(() => {
@@ -54,13 +74,25 @@ describe('DetailedCard', () => {
   });
 
   it('DetailedCard component clicking the close button hides the component', async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+
     const { container } = render(
-      <MemoryRouter initialEntries={['/details?page=1&detail=ANMA0000264633']}>
-        <Routes>
-          <Route path="/" element={<div />} />
-          <Route path="details" element={<DetailPage />} />
-        </Routes>
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter
+          initialEntries={['/details?page=1&detail=ANMA0000264633']}
+        >
+          <Routes>
+            <Route path="/" element={<div />} />
+            <Route path="details" element={<DetailPage />} />
+          </Routes>
+        </MemoryRouter>
+      </QueryClientProvider>
     );
 
     expect(container.querySelector('.detail-page')).toBeInTheDocument();
@@ -80,13 +112,25 @@ describe('DetailedCard', () => {
         }),
     } as Response);
 
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+
     const { getByText } = render(
-      <MemoryRouter initialEntries={['/details?page=1&detail=ANMA0000264633']}>
-        <Routes>
-          <Route path="/" element={<div />} />
-          <Route path="details" element={<DetailPage />} />
-        </Routes>
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter
+          initialEntries={['/details?page=1&detail=ANMA0000264633']}
+        >
+          <Routes>
+            <Route path="/" element={<div />} />
+            <Route path="details" element={<DetailPage />} />
+          </Routes>
+        </MemoryRouter>
+      </QueryClientProvider>
     );
 
     await waitFor(() => {
@@ -100,13 +144,25 @@ describe('DetailedCard', () => {
       json: () => Promise.resolve({}),
     } as Response);
 
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+
     const { getByText } = render(
-      <MemoryRouter initialEntries={['/details?page=1&detail=ANMA0000264633']}>
-        <Routes>
-          <Route path="/" element={<div />} />
-          <Route path="details" element={<DetailPage />} />
-        </Routes>
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter
+          initialEntries={['/details?page=1&detail=ANMA0000264633']}
+        >
+          <Routes>
+            <Route path="/" element={<div />} />
+            <Route path="details" element={<DetailPage />} />
+          </Routes>
+        </MemoryRouter>
+      </QueryClientProvider>
     );
 
     await waitFor(() => {

@@ -9,6 +9,7 @@ import SearchResults from '../components/Results';
 import SearchPage from '../pages/Search';
 import type { SearchResultItem } from 'components/Card';
 import { MemoryRouter } from 'react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const mockData: SearchResultItem[] = [
   { uid: '1', name: 'name 1', earthAnimal: 'true' },
@@ -97,11 +98,21 @@ describe('SearchPage', () => {
         animals: [],
       }),
     });
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+
     localStorage.setItem('searchText', 'saved text query');
     render(
-      <MemoryRouter initialEntries={['/']}>
-        <SearchPage />
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter initialEntries={['/']}>
+          <SearchPage />
+        </MemoryRouter>
+      </QueryClientProvider>
     );
     await waitFor(() => {
       expect(screen.getByText('Network error')).toBeInTheDocument();
@@ -117,11 +128,20 @@ describe('SearchPage', () => {
         animals: [],
       }),
     });
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
     localStorage.setItem('searchText', 'saved text query');
     render(
-      <MemoryRouter initialEntries={['/']}>
-        <SearchPage />
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter initialEntries={['/']}>
+          <SearchPage />
+        </MemoryRouter>
+      </QueryClientProvider>
     );
     await waitFor(() => {
       expect(screen.getByText('Not Found')).toBeInTheDocument();
@@ -137,11 +157,20 @@ describe('SearchPage', () => {
         animals: [],
       }),
     });
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
     localStorage.setItem('searchText', 'saved text query');
     render(
-      <MemoryRouter initialEntries={['/']}>
-        <SearchPage />
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter initialEntries={['/']}>
+          <SearchPage />
+        </MemoryRouter>
+      </QueryClientProvider>
     );
     await waitFor(() => {
       expect(screen.getByText('Server Error')).toBeInTheDocument();

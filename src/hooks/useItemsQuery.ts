@@ -21,7 +21,8 @@ async function fetchItems(
   );
 
   if (!response.ok) {
-    let errorMessage = response.statusText;
+    const errorBody = await response.json();
+    let errorMessage = errorBody.message || errorBody.statusText;
 
     if (response.status >= 500) {
       errorMessage = 'Server Error';

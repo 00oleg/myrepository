@@ -9,6 +9,7 @@ import App from '../App';
 import { MemoryRouter } from 'react-router';
 import Page404 from '../pages/404';
 import { ThemeProvider } from '../ThemeContext';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 beforeEach(() => {
   (window.fetch as jest.Mock) = jest.fn();
@@ -23,12 +24,15 @@ it('makes initial API call on component mount', async () => {
       page: { totalPages: 1 },
     }),
   });
+  const queryClient = new QueryClient();
   render(
-    <MemoryRouter initialEntries={['/']}>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={['/']}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
   await waitFor(() => {
     expect(window.fetch).toHaveBeenCalled();
@@ -45,12 +49,15 @@ it('handles search term from localStorage on initial load', async () => {
       page: { totalPages: 1 },
     }),
   });
+  const queryClient = new QueryClient();
   render(
-    <MemoryRouter initialEntries={['/']}>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={['/']}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
   await waitFor(() => {
     expect(screen.getByDisplayValue('Test name')).toBeInTheDocument();
@@ -63,12 +70,15 @@ it('manages loading states during API calls', async () => {
     ok: true,
     json: async () => ({ animals: [], page: { totalPages: 1 } }),
   });
+  const queryClient = new QueryClient();
   render(
-    <MemoryRouter initialEntries={['/']}>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={['/']}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
   expect(screen.getByText(/Loading.../i)).toBeInTheDocument();
   await waitFor(() => {
@@ -85,12 +95,15 @@ it('calls API with correct parameters', async () => {
     }),
   });
   localStorage.setItem('searchText', 'Test');
+  const queryClient = new QueryClient();
   render(
-    <MemoryRouter initialEntries={['/']}>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={['/']}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
   await waitFor(() => {
     expect(window.fetch).toHaveBeenCalledWith(
@@ -108,12 +121,15 @@ it('handles successful API responses', async () => {
       page: { totalPages: 1 },
     }),
   });
+  const queryClient = new QueryClient();
   render(
-    <MemoryRouter initialEntries={['/']}>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={['/']}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
   await waitFor(() => {
     expect(screen.getByText('Test animal name')).toBeInTheDocument();
@@ -121,17 +137,26 @@ it('handles successful API responses', async () => {
 });
 
 it('handles API error responses', async () => {
-  (window.fetch as jest.Mock).mockResolvedValueOnce({
+  (window.fetch as jest.Mock).mockResolvedValue({
     ok: false,
     status: 500,
     json: async () => ({ message: 'Server Error' }),
   });
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
   render(
-    <MemoryRouter initialEntries={['/']}>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={['/']}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
   await waitFor(() => {
     expect(screen.getByText(/Server Error/i)).toBeInTheDocument();
@@ -146,12 +171,15 @@ it('updates component state based on API responses', async () => {
       page: { totalPages: 1 },
     }),
   });
+  const queryClient = new QueryClient();
   render(
-    <MemoryRouter initialEntries={['/']}>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={['/']}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
   await waitFor(() => {
     expect(screen.getByText('Test animal name')).toBeInTheDocument();
@@ -166,13 +194,15 @@ it('manages search term state correctly', async () => {
       page: { totalPages: 1 },
     }),
   });
-
+  const queryClient = new QueryClient();
   render(
-    <MemoryRouter initialEntries={['/']}>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={['/']}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
   fireEvent.change(screen.getByTestId('search-input'), {
     target: { value: 'Test animal name' },

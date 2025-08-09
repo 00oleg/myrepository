@@ -77,12 +77,15 @@ const DetailPage = () => {
   useEffect(() => {
     handleLoading(isLoading);
 
+    if (isError) {
+      handleLoading(false);
+      handleError(queryError?.message || 'Something went wrong');
+      return;
+    }
+
     if (itemDetail) {
       handleResult(itemDetail);
       handleLoading(false);
-    } else if (isError) {
-      handleLoading(false);
-      handleError(queryError?.message || 'Something went wrong');
     }
   }, [itemDetail, isLoading, isError, queryError]);
 

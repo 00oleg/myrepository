@@ -82,16 +82,19 @@ const SearchPage = () => {
   useEffect(() => {
     handleLoading(isLoading);
 
+    if (isError) {
+      handleLoading(false);
+      handleTotalPages(1);
+      handleResults([]);
+      handleError(queryError?.message || 'Something went wrong');
+      return;
+    }
+
     if (itemsData && itemsData.animals.length) {
       handleResults(itemsData.animals);
       handleTotalPages(itemsData.page.totalPages);
       handleError('');
       handleLoading(false);
-    } else if (isError) {
-      handleLoading(false);
-      handleTotalPages(1);
-      handleResults([]);
-      handleError(queryError?.message || 'Something went wrong');
     }
   }, [itemsData, isLoading, isError, queryError]);
 
