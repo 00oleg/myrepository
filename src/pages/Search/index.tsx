@@ -5,8 +5,9 @@ import SearchResults from '../../components/Results';
 import useSearchQuery from '../../hooks/useSearchQuery';
 import PaginationResults from '../../components/Pagination';
 import ResultActions from '../../components/ResultActions';
+import { useItemsQuery, useRefreshItems } from '../../hooks/useItemsQuery';
 
-interface SearchResult {
+export interface SearchResult {
   uid: string;
   name: string;
   earthAnimal: string;
@@ -35,7 +36,7 @@ const SearchPage = () => {
     setLoading(param);
   };
 
-  const handleResults = (param: []) => {
+  const handleResults = (param: SearchResult[]) => {
     setResults(param);
   };
   const handleError = (param: string) => {
@@ -63,49 +64,36 @@ const SearchPage = () => {
     handlePageNumber(1);
   };
 
-  const handleSearch = () => {
+  const {
+    data: itemsData,
+    isLoading,
+    isError,
+    error: queryError,
+  } = useItemsQuery(searchText, pageNumber, perPage);
+
+  const refreshItems = useRefreshItems(searchText, pageNumber, perPage);
+
+  const refresh = async () => {
     handleLoading(true);
-    handleError('');
-
-    fetch(
-      `https://stapi.co/api/v1/rest/animal/search?name=${searchText}&pageNumber=${pageNumber - 1}&pageSize=${perPage}`,
-      {
-        method: 'POST',
-      }
-    )
-      .then((response) => {
-        if (!response.ok) {
-          return response.json().then((errorData) => {
-            let errorMessage = errorData.message;
-
-            if (response.status >= 500) {
-              errorMessage = 'Server Error';
-            } else if (response.status >= 400) {
-              errorMessage = 'Not Found';
-            } else if (!errorMessage) {
-              errorMessage = 'Response was not ok';
-            }
-            throw new Error(errorMessage);
-          });
-        }
-        return response.json();
-      })
-      .then(({ animals, page }) => {
-        handleTotalPages(page.totalPages);
-        handleResults(animals);
-        handleLoading(false);
-      })
-      .catch((error) => {
-        handleLoading(false);
-        handleTotalPages(1);
-        handleResults([]);
-        handleError(error?.message || 'Something went wrong');
-      });
+    await refreshItems();
+    handleLoading(false);
   };
 
   useEffect(() => {
-    handleSearch();
-  }, [searchText, perPage, pageNumber]);
+    handleLoading(isLoading);
+
+    if (itemsData && itemsData.animals.length) {
+      handleResults(itemsData.animals);
+      handleTotalPages(itemsData.page.totalPages);
+      handleError('');
+      handleLoading(false);
+    } else if (isError) {
+      handleLoading(false);
+      handleTotalPages(1);
+      handleResults([]);
+      handleError(queryError?.message || 'Something went wrong');
+    }
+  }, [itemsData, isLoading, isError, queryError]);
 
   useEffect(() => {
     if (!searchParams.get('detail')) {
@@ -116,7 +104,11 @@ const SearchPage = () => {
   return (
     <div className="search-page">
       <div className="search-page__left">
-        <SearchTop searchText={searchText} onSearch={handleSearchText} />
+        <SearchTop
+          searchText={searchText}
+          onSearch={handleSearchText}
+          refresh={refresh}
+        />
         <SearchResults
           loading={loading}
           results={results}
