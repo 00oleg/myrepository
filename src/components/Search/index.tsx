@@ -28,7 +28,11 @@ const SearchTop = ({ searchText, onSearch, refresh }: SearchInputProps) => {
       <button data-testid={'search-button'} onClick={handleSearch}>
         Search
       </button>
-      <button data-testid={'refresh-button'} onClick={refresh}>
+      <button
+        className="btn-error"
+        data-testid={'refresh-button'}
+        onClick={refresh}
+      >
         Refresh
       </button>
     </div>

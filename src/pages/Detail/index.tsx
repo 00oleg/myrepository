@@ -1,3 +1,7 @@
+import {
+  useItemDetailQuery,
+  useRefreshItemDetail,
+} from '../../hooks/useDetailQuery';
 import Loading from '../../components/Loading';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
@@ -12,7 +16,7 @@ const names = {
   feline: 'Feline',
 };
 
-interface DetailResult {
+export interface DetailResult {
   uid: string;
   name: string;
   earthAnimal: boolean;
@@ -54,37 +58,33 @@ const DetailPage = () => {
     setDetail(param);
   };
 
-  const handleDetail = (uid: string | null) => {
+  const uid = searchParams.get('detail');
+  const {
+    data: itemDetail,
+    isLoading,
+    isError,
+    error: queryError,
+  } = useItemDetailQuery(uid || '');
+
+  const refreshDetail = useRefreshItemDetail(uid || '');
+
+  const refresh = async () => {
     handleLoading(true);
-    handleError('');
-
-    fetch(`https://stapi.co/api/v1/rest/animal?uid=${uid}`, {
-      method: 'GET',
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Response was not ok');
-        }
-
-        return response.json();
-      })
-      .then(({ animal }) => {
-        if (!animal) {
-          handleError('Animal not found');
-          throw new Error('Animal not found');
-        }
-        handleResult(animal);
-        handleLoading(false);
-      })
-      .catch((error) => {
-        handleLoading(false);
-        handleError(error?.message || 'Something went wrong');
-      });
+    await refreshDetail();
+    handleLoading(false);
   };
 
   useEffect(() => {
-    handleDetail(searchParams.get('detail'));
-  }, []);
+    handleLoading(isLoading);
+
+    if (itemDetail) {
+      handleResult(itemDetail);
+      handleLoading(false);
+    } else if (isError) {
+      handleLoading(false);
+      handleError(queryError?.message || 'Something went wrong');
+    }
+  }, [itemDetail, isLoading, isError, queryError]);
 
   return (
     <>
@@ -96,8 +96,10 @@ const DetailPage = () => {
           onClick={onDismiss}
         >
           Close
+        </button>{' '}
+        <button className="btn-error" onClick={refresh}>
+          Refresh
         </button>
-
         <h2>Animal detail:</h2>
         {loading ? (
           <Loading loading={true} />

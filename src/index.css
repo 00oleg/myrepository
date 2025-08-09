@@ -107,6 +107,7 @@ input[type='text'] {
   display: flex;
   justify-content: center;
   padding: 10px;
+  gap: 5px;
 }
 
 .search-result {
