@@ -29,6 +29,181 @@ describe('DetailedCard', () => {
     } as Response);
   });
 
+  describe('DetailPage Querying & Caching', () => {
+    let queryClient: QueryClient;
+    beforeEach(() => {
+      queryClient = new QueryClient({
+        defaultOptions: { queries: { retry: false } },
+      });
+      jest.clearAllMocks();
+    });
+
+    it('should cache data and not refetch within staleTime', async () => {
+      const fetchSpy = jest.fn().mockResolvedValue({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            animal: {
+              uid: 'ANMA0000264633',
+              name: 'Abalone',
+              earthAnimal: true,
+              earthInsect: false,
+              avian: false,
+              canine: false,
+              feline: false,
+            },
+          }),
+      });
+      global.fetch = fetchSpy;
+
+      render(
+        <QueryClientProvider client={queryClient}>
+          <MemoryRouter
+            initialEntries={['/details?page=1&detail=ANMA0000264633']}
+          >
+            <Routes>
+              <Route path="details" element={<DetailPage />} />
+            </Routes>
+          </MemoryRouter>
+        </QueryClientProvider>
+      );
+      await waitFor(() => {
+        expect(screen.getByText('Abalone')).toBeInTheDocument();
+      });
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+
+      render(
+        <QueryClientProvider client={queryClient}>
+          <MemoryRouter
+            initialEntries={['/details?page=1&detail=ANMA0000264633']}
+          >
+            <Routes>
+              <Route path="details" element={<DetailPage />} />
+            </Routes>
+          </MemoryRouter>
+        </QueryClientProvider>
+      );
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should refetch data when Refresh button is clicked', async () => {
+      const fetchSpy = jest
+        .fn()
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              animal: {
+                uid: 'ANMA0000264633',
+                name: 'Abalone',
+                earthAnimal: true,
+                earthInsect: false,
+                avian: false,
+                canine: false,
+                feline: false,
+              },
+            }),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              animal: {
+                uid: 'ANMA0000264633',
+                name: 'Abalone Refreshed',
+                earthAnimal: true,
+                earthInsect: false,
+                avian: false,
+                canine: false,
+                feline: false,
+              },
+            }),
+        });
+      global.fetch = fetchSpy;
+
+      render(
+        <QueryClientProvider client={queryClient}>
+          <MemoryRouter
+            initialEntries={['/details?page=1&detail=ANMA0000264633']}
+          >
+            <Routes>
+              <Route path="details" element={<DetailPage />} />
+            </Routes>
+          </MemoryRouter>
+        </QueryClientProvider>
+      );
+      await waitFor(() => {
+        expect(screen.getByText('Abalone')).toBeInTheDocument();
+      });
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+
+      fireEvent.click(screen.getByText('Refresh'));
+      await waitFor(() => {
+        expect(screen.getByText('Abalone Refreshed')).toBeInTheDocument();
+      });
+      expect(fetchSpy).toHaveBeenCalledTimes(2);
+    });
+
+    it('shows loading indicator during refresh', async () => {
+      const fetchSpy = jest
+        .fn()
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              animal: {
+                uid: 'ANMA0000264633',
+                name: 'Abalone',
+                earthAnimal: true,
+                earthInsect: false,
+                avian: false,
+                canine: false,
+                feline: false,
+              },
+            }),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              animal: {
+                uid: 'ANMA0000264633',
+                name: 'Abalone Refreshed',
+                earthAnimal: true,
+                earthInsect: false,
+                avian: false,
+                canine: false,
+                feline: false,
+              },
+            }),
+        });
+      global.fetch = fetchSpy;
+
+      render(
+        <QueryClientProvider client={queryClient}>
+          <MemoryRouter
+            initialEntries={['/details?page=1&detail=ANMA0000264633']}
+          >
+            <Routes>
+              <Route path="details" element={<DetailPage />} />
+            </Routes>
+          </MemoryRouter>
+        </QueryClientProvider>
+      );
+      await waitFor(() => {
+        expect(screen.getByText('Abalone')).toBeInTheDocument();
+      });
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+
+      fireEvent.click(screen.getByText('Refresh'));
+      expect(screen.getByText('Loading...')).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByText('Abalone Refreshed')).toBeInTheDocument();
+      });
+      expect(fetchSpy).toHaveBeenCalledTimes(2);
+    });
+  });
+
   it('DetailedCard component a loading indicator is displayed while fetching data', async () => {
     const queryClient = new QueryClient({
       defaultOptions: {
