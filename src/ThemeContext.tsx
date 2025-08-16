@@ -19,9 +19,6 @@ const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  // const [theme, setTheme] = useState<Theme>(
-  //   (localStorage.getItem('theme') as Theme) || 'dark'
-  // );
   const [theme, setTheme] = useState<Theme>('dark');
 
   const toggleTheme = (selectedTheme: Theme) => {

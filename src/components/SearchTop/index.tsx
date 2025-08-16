@@ -3,10 +3,9 @@ import { useState } from 'react';
 interface SearchInputProps {
   searchText: string;
   onSearch: (text: string) => void;
-  refresh: () => void;
 }
 
-const SearchTop = ({ searchText, onSearch, refresh }: SearchInputProps) => {
+const SearchTop = ({ searchText, onSearch }: SearchInputProps) => {
   const [searchInput, setSearchInput] = useState<string>(searchText || '');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,13 +26,6 @@ const SearchTop = ({ searchText, onSearch, refresh }: SearchInputProps) => {
       />
       <button data-testid={'search-button'} onClick={handleSearch}>
         Search
-      </button>
-      <button
-        className="btn-error"
-        data-testid={'refresh-button'}
-        onClick={refresh}
-      >
-        Refresh
       </button>
     </div>
   );

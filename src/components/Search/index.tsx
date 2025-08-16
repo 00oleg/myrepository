@@ -3,14 +3,9 @@ import SearchResults from '../../components/Results';
 import PaginationResults from '../../components/Pagination';
 import ResultActions from '../../components/ResultActions';
 import { useSearchParams } from 'next/navigation';
-import DetailPage from '../../components/Details';
+import Details from '../Details';
 import { SearchResultItem } from '../Card';
-
-export interface SearchResult {
-  uid: string;
-  name: string;
-  earthAnimal: string;
-}
+import type { DetailResult } from '../../api/animals';
 
 interface SearchProps {
   searchText: string;
@@ -20,8 +15,9 @@ interface SearchProps {
   pageNumber: number;
   totalPages: number;
   perPage: number;
-  refresh: () => void;
   error: string | null;
+  detailData?: DetailResult | null;
+  detailError?: string | null;
 }
 
 const Search = ({
@@ -32,19 +28,16 @@ const Search = ({
   pageNumber,
   totalPages,
   perPage,
-  refresh,
   error,
+  detailData,
+  detailError,
 }: SearchProps) => {
   const searchParams = useSearchParams();
   const currentDetails = searchParams?.get('details');
   return (
     <div className="search-page">
       <div className="search-page__left">
-        <SearchTop
-          searchText={searchText}
-          onSearch={handleSearchText}
-          refresh={refresh}
-        />
+        <SearchTop searchText={searchText} onSearch={handleSearchText} />
         <SearchResults
           loading={loading}
           results={results}
@@ -63,7 +56,9 @@ const Search = ({
         <ResultActions />
       </div>
       <div className="search-page__right">
-        {currentDetails ? <DetailPage /> : null}
+        {currentDetails ? (
+          <Details detailData={detailData || null} error={detailError} />
+        ) : null}
       </div>
     </div>
   );

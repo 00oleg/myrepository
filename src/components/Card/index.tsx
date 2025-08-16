@@ -30,7 +30,6 @@ const Card = ({ uid, name, earthAnimal }: SearchResultItem) => {
       />
       <Link
         className="card-list__item-link"
-        // href={`/details?page=${pageNumber}&detail=${uid}`}
         href={`/search?searchTerm=${currentSearchTerm}&page=${currentPage}&per_page=${currentPerPage}&details=${uid}`}
         data-testid="card-list__item-link"
       >
