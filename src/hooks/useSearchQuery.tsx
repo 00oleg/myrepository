@@ -5,8 +5,9 @@ function useSearchQuery(
   initialValue: string
 ): [string, React.Dispatch<React.SetStateAction<string>>] {
   const [searchQuery, setSearchQuery] = useState<string>(() => {
-    const storedValue = localStorage.getItem(key);
-    return storedValue !== null ? storedValue : initialValue;
+    // const storedValue = localStorage.getItem(key);
+    // return storedValue !== null ? storedValue : initialValue;
+    return initialValue;
   });
 
   useEffect(() => {

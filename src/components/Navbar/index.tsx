@@ -1,5 +1,5 @@
+import Link from 'next/link';
 import ThemeSelector from '../../components/ThemeSelector';
-import { NavLink } from 'react-router';
 
 const Navbar = () => {
   return (
@@ -7,14 +7,14 @@ const Navbar = () => {
       <nav className="navbar">
         <ul className="navbar-list">
           <li>
-            <NavLink className="navbar-link" to="/">
+            <Link className="navbar-link" href="/search">
               Home
-            </NavLink>
+            </Link>
           </li>
           <li>
-            <NavLink className="navbar-link" to="/about">
+            <Link className="navbar-link" href="/about">
               About
-            </NavLink>
+            </Link>
           </li>
         </ul>
 

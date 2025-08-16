@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import type { SearchResult } from '../pages/Search';
+import type { SearchResult } from '../pages/search';
 
 interface SearchResults {
   animals: SearchResult[];
@@ -13,15 +13,12 @@ async function fetchItems(
   pageNumber: number,
   perPage: number
 ): Promise<SearchResults> {
-  const response = await fetch(
-    `https://stapi.co/api/v1/rest/animal/search?name=${searchText}&pageNumber=${pageNumber - 1}&pageSize=${perPage}`,
-    {
-      method: 'POST',
-    }
-  );
+  const response = await fetch(`https://stapi.co/api/v1/rest/animal/search?name=${encodeURIComponent(searchText)}&pageNumber=${pageNumber - 1}&pageSize=${perPage}`, {
+    method: 'POST',
+  });
 
   if (!response.ok) {
-    const errorBody = await response.json();
+    const errorBody = await response.json().catch(() => ({}));
     let errorMessage = errorBody.message || errorBody.statusText;
 
     if (response.status >= 500) {
@@ -33,18 +30,26 @@ async function fetchItems(
     }
     throw new Error(errorMessage);
   }
-  return response.json();
+  
+  const data = await response.json();
+  return data;
 }
 
 export function useItemsQuery(
   searchText: string,
   page: number,
-  perPage: number
+  perPage: number,
+  options?: { initialData?: SearchResults }
 ) {
   return useQuery({
     queryKey: ['items', searchText, page, perPage],
-    queryFn: () => fetchItems(searchText, page, perPage),
+    queryFn: () => {
+      console.log('queryFn executing for:', { searchText, page, perPage });
+      return fetchItems(searchText, page, perPage);
+    },
     staleTime: 5 * 60 * 1000,
+    enabled: true,
+    ...options
   });
 }
 

@@ -1,18 +1,18 @@
-import { NavLink } from 'react-router';
+import Link from 'next/link';
 import getArryByNumber from '../../utils/getArryByNumber';
 
 interface PaginationResultsProps {
   pageNumber: number;
   totalPages: number;
   perPage: number;
-  handlePerPage: (page: number) => void;
+  searchText: string;
 }
 
 const PaginationResults = ({
   pageNumber,
   totalPages,
   perPage,
-  handlePerPage,
+  searchText,
 }: PaginationResultsProps) => {
   return (
     <div className="pagination-result">
@@ -20,13 +20,13 @@ const PaginationResults = ({
         <div className="pagination-result__title">Page:</div>
         {getArryByNumber(totalPages).map((el: number) => {
           return (
-            <NavLink
+            <Link
               key={el}
               className={`pagination-result__item${pageNumber - 1 === el ? ' current' : ''}`}
-              to={`?page=${el + 1}`}
+              href={`?searchTerm=${searchText}&page=${el + 1}&per_page=${perPage}`}
             >
               {el + 1}
-            </NavLink>
+            </Link>
           );
         })}
       </div>
@@ -34,17 +34,17 @@ const PaginationResults = ({
       <div className="pagination-result__list">
         <div className="pagination-result__title">Per Page:</div>
         {getArryByNumber(3).map((el: number) => {
-          const page = (el + 1) * 10;
+          const perPageEl = (el + 1) * 10;
 
           return (
-            <div
+            <Link
               key={el}
-              data-testid={`pagination-per-page-${page}`}
-              className={`pagination-result__item${page === perPage ? ' current' : ''}`}
-              onClick={() => handlePerPage(page)}
+              data-testid={`pagination-per-page-${perPageEl}`}
+              className={`pagination-result__item${perPage === perPageEl ? ' current' : ''}`}
+              href={`?searchTerm=${searchText}&page=${pageNumber}&per_page=${perPageEl}`}
             >
-              {page}
-            </div>
+              {perPageEl}
+            </Link>
           );
         })}
       </div>

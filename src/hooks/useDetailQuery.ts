@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import type { DetailResult } from '../pages/Detail';
+import type { DetailResult } from '../components/Details';
 
 async function fetchItemDetail(uid: string): Promise<DetailResult> {
   const response = await fetch(

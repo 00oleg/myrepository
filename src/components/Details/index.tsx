@@ -2,9 +2,9 @@ import {
   useItemDetailQuery,
   useRefreshItemDetail,
 } from '../../hooks/useDetailQuery';
-import Loading from '../../components/Loading';
+import Loading from '../Loading';
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 const names = {
   uid: 'UID',
@@ -27,7 +27,13 @@ export interface DetailResult {
 }
 
 const DetailPage = () => {
-  const [searchParams] = useSearchParams();
+  const searchParams = useSearchParams();
+  const { replace } = useRouter();
+  const pathname = usePathname();
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const currentSearchTerm = String(searchParams?.get('searchTerm')) || '';
+  const currentPage = Number(searchParams?.get('page'));
+  const currentPerPage = Number(searchParams?.get('per_page'));
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [detail, setDetail] = useState<DetailResult>({
@@ -39,15 +45,16 @@ const DetailPage = () => {
     canine: false,
     feline: false,
   });
-  const navigate = useNavigate();
-  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const handleError = (param: string) => {
     setError(param);
   };
 
   const onDismiss = () => {
-    navigate(`/?page=${searchParams.get('page')}`);
+    // replace(`${pathname}/?page=${searchParams?.get('page')}`);
+    replace(
+      `${pathname}/?searchTerm=${currentSearchTerm}&page=${currentPage}&per_page=${currentPerPage}`,
+    );
   };
 
   const handleLoading = (param: boolean) => {
@@ -58,7 +65,7 @@ const DetailPage = () => {
     setDetail(param);
   };
 
-  const uid = searchParams.get('detail');
+  const uid = searchParams?.get('detail');
   const {
     data: itemDetail,
     isLoading,
