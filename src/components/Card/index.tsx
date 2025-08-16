@@ -9,7 +9,7 @@ export interface SearchResultItem {
   pageNumber?: number;
 }
 
-const Card = ({ uid, name, earthAnimal, pageNumber }: SearchResultItem) => {
+const Card = ({ uid, name, earthAnimal }: SearchResultItem) => {
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams?.get('page')) || 1;
   const currentPerPage = Number(searchParams?.get('per_page')) || 10;

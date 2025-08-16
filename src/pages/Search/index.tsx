@@ -1,7 +1,7 @@
-import { InferGetServerSidePropsType, GetServerSideProps } from "next";
-import { useRouter } from "next/router";
-import useSearchQuery from "../../hooks/useSearchQuery";
-import Search from "../../components/Search";
+import { InferGetServerSidePropsType, GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
+import useSearchQuery from '../../hooks/useSearchQuery';
+import Search from '../../components/Search';
 
 export interface SearchResult {
   uid: string;
@@ -22,14 +22,17 @@ async function fetchItemsOnServer(
   perPage: number
 ): Promise<SearchResults> {
   try {
-    const response = await fetch(`https://stapi.co/api/v1/rest/animal/search?name=${encodeURIComponent(searchText)}&pageNumber=${pageNumber - 1}&pageSize=${perPage}`, {
-      method: 'POST',
-    });
+    const response = await fetch(
+      `https://stapi.co/api/v1/rest/animal/search?name=${encodeURIComponent(searchText)}&pageNumber=${pageNumber - 1}&pageSize=${perPage}`,
+      {
+        method: 'POST',
+      }
+    );
 
     if (!response.ok) {
       return {
         animals: [],
-        page: { totalPages: 0 }
+        page: { totalPages: 0 },
       };
     }
 
@@ -39,13 +42,13 @@ async function fetchItemsOnServer(
     console.error('Server fetch error:', error);
     return {
       animals: [],
-      page: { totalPages: 0 }
+      page: { totalPages: 0 },
     };
   }
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { page, per_page, details, searchTerm } = query;
+  const { page, per_page, searchTerm } = query;
 
   const currentSearchTerm = searchTerm ? String(searchTerm) : '';
   const currentPage = Number(page) || 1;
@@ -77,7 +80,7 @@ export default function Page({
   const router = useRouter();
   const [searchText, setSearchText] = useSearchQuery(
     'searchText',
-    currentSearchTerm,
+    currentSearchTerm
   );
 
   const handleSearchText = (param: string) => {
@@ -87,7 +90,7 @@ export default function Page({
       pathname: '/search',
       query: {
         searchTerm: param.toString(),
-        page: 1, 
+        page: 1,
         per_page: perPage.toString(),
       },
     });

@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import { useTheme } from '../ThemeContext';
 import Navbar from '../components/Navbar';

@@ -8,11 +8,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <html>
       <body>
-          <ErrorBoundary fallback={<p>ErrorBoundary: Something went wrong.</p>}>
-            <ThemeProvider>
-              <MainLayout>{children}</MainLayout>
-            </ThemeProvider>
-          </ErrorBoundary>
+        <ErrorBoundary fallback={<p>ErrorBoundary: Something went wrong.</p>}>
+          <ThemeProvider>
+            <MainLayout>{children}</MainLayout>
+          </ThemeProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

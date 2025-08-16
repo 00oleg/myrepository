@@ -53,7 +53,7 @@ const DetailPage = () => {
   const onDismiss = () => {
     // replace(`${pathname}/?page=${searchParams?.get('page')}`);
     replace(
-      `${pathname}/?searchTerm=${currentSearchTerm}&page=${currentPage}&per_page=${currentPerPage}`,
+      `${pathname}/?searchTerm=${currentSearchTerm}&page=${currentPage}&per_page=${currentPerPage}`
     );
   };
 

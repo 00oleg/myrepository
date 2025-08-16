@@ -13,9 +13,12 @@ async function fetchItems(
   pageNumber: number,
   perPage: number
 ): Promise<SearchResults> {
-  const response = await fetch(`https://stapi.co/api/v1/rest/animal/search?name=${encodeURIComponent(searchText)}&pageNumber=${pageNumber - 1}&pageSize=${perPage}`, {
-    method: 'POST',
-  });
+  const response = await fetch(
+    `https://stapi.co/api/v1/rest/animal/search?name=${encodeURIComponent(searchText)}&pageNumber=${pageNumber - 1}&pageSize=${perPage}`,
+    {
+      method: 'POST',
+    }
+  );
 
   if (!response.ok) {
     const errorBody = await response.json().catch(() => ({}));
@@ -30,7 +33,7 @@ async function fetchItems(
     }
     throw new Error(errorMessage);
   }
-  
+
   const data = await response.json();
   return data;
 }
@@ -49,7 +52,7 @@ export function useItemsQuery(
     },
     staleTime: 5 * 60 * 1000,
     enabled: true,
-    ...options
+    ...options,
   });
 }
 
