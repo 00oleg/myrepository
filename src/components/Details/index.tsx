@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import type { DetailResult } from '../../api/animals';
+import { queryParams } from '../Card';
 
 const names = {
   uid: 'UID',
@@ -15,21 +16,23 @@ const names = {
 interface StaticDetailPageProps {
   detailData: DetailResult | null;
   error?: string | null;
+  queryParams: queryParams;
 }
 
-const Details = ({ detailData, error: propError }: StaticDetailPageProps) => {
-  const searchParams = useSearchParams();
+const Details = ({
+  detailData,
+  error: propError,
+  queryParams,
+}: StaticDetailPageProps) => {
   const { replace } = useRouter();
   const pathname = usePathname();
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const currentSearchTerm = String(searchParams?.get('searchTerm')) || '';
-  const currentPage = Number(searchParams?.get('page'));
-  const currentPerPage = Number(searchParams?.get('per_page'));
   const [error, setError] = useState<string>('');
+  const { page, perPage, keywords } = queryParams;
 
   const onDismiss = () => {
     replace(
-      `${pathname}/?searchTerm=${currentSearchTerm}&page=${currentPage}&per_page=${currentPerPage}`
+      `${pathname}/?searchTerm=${keywords}&page=${page}&per_page=${perPage}`
     );
   };
 

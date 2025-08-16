@@ -1,18 +1,18 @@
 import Loading from '../Loading';
-import Card, { type SearchResultItem } from '../Card';
+import Card, { queryParams, type SearchResultItem } from '../Card';
 
 interface SearchResultsProps {
   results: SearchResultItem[];
   loading: boolean;
   error: string | null;
-  pageNumber: number;
+  queryParams: queryParams;
 }
 
 const SearchResults = ({
   loading,
   results,
   error,
-  pageNumber,
+  queryParams,
 }: SearchResultsProps) => {
   if (error) {
     return (
@@ -39,7 +39,7 @@ const SearchResults = ({
               uid={result?.uid}
               name={result?.name}
               earthAnimal={result?.earthAnimal}
-              pageNumber={pageNumber}
+              queryParams={queryParams}
             />
           ))}
         </div>

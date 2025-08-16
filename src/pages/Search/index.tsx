@@ -1,5 +1,5 @@
 import { InferGetServerSidePropsType, GetServerSideProps } from 'next';
-import { useRouter } from 'next/router';
+import { usePathname, useRouter } from 'next/navigation';
 import useSearchQuery from '../../hooks/useSearchQuery';
 import Search from '../../components/Search';
 import {
@@ -15,7 +15,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const currentSearchTerm = searchTerm ? String(searchTerm) : '';
   const currentPage = Number(page) || 1;
   const currentPerPage = Number(per_page) || 10;
-  const currentDetails = String(details) || '';
+  const currentDetails = details ? String(details) : '';
 
   let initialData: SearchResults = { animals: [], page: { totalPages: 0 } };
   let searchError: string | null = null;
@@ -49,29 +49,31 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
   return {
     props: {
-      searchTerm: currentSearchTerm,
-      perPage: currentPerPage,
       page: currentPage,
       initialData,
       detailData,
-      detailUid: currentDetails || null,
       searchError,
       detailError,
+      perPage: currentPerPage,
+      keywords: currentSearchTerm,
+      details: currentDetails,
     },
   };
 };
 
 export default function Page({
   page,
-  perPage,
-  searchTerm,
   initialData,
   detailData,
   searchError,
   detailError,
+  perPage,
+  keywords,
+  details,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const currentSearchTerm = searchTerm ? String(searchTerm) : '';
-  const router = useRouter();
+  const currentSearchTerm = keywords ? String(keywords) : '';
+  const { replace } = useRouter();
+  const pathname = usePathname();
   const [searchText, setSearchText] = useSearchQuery(
     'searchText',
     currentSearchTerm
@@ -79,14 +81,7 @@ export default function Page({
 
   const handleSearchText = (param: string) => {
     setSearchText(param);
-    router.push({
-      pathname: '/search',
-      query: {
-        searchTerm: param.toString(),
-        page: 1,
-        per_page: perPage.toString(),
-      },
-    });
+    replace(`${pathname}/?searchTerm=${param}&page=1&per_page=${perPage}`);
   };
 
   return (
@@ -96,12 +91,16 @@ export default function Page({
         handleSearchText={handleSearchText}
         loading={false}
         results={initialData?.animals || []}
-        pageNumber={page || 1}
         totalPages={initialData?.page.totalPages || 0}
-        perPage={perPage}
         error={searchError}
         detailData={detailData}
         detailError={detailError}
+        queryParams={{
+          page: page,
+          perPage: perPage,
+          keywords: keywords,
+          details: details,
+        }}
       />
     </>
   );

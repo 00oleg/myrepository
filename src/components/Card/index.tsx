@@ -1,19 +1,22 @@
 import Link from 'next/link';
 import { useSelectedItemsStore } from '../../store/selectedItemsStore';
-import { useSearchParams } from 'next/navigation';
 
+export interface queryParams {
+  page: number;
+  perPage: number;
+  keywords: string;
+  details?: string;
+}
 export interface SearchResultItem {
   uid: string;
   name: string;
   earthAnimal: string;
   pageNumber?: number;
+  queryParams: queryParams;
 }
 
-const Card = ({ uid, name, earthAnimal }: SearchResultItem) => {
-  const searchParams = useSearchParams();
-  const currentPage = Number(searchParams?.get('page')) || 1;
-  const currentPerPage = Number(searchParams?.get('per_page')) || 10;
-  const currentSearchTerm = String(searchParams?.get('searchTerm')) || '';
+const Card = ({ queryParams, uid, name, earthAnimal }: SearchResultItem) => {
+  const { page, perPage, keywords } = queryParams;
   const { toggleItem, isSelected } = useSelectedItemsStore();
 
   const handleCheckboxChange = () => {
@@ -30,7 +33,7 @@ const Card = ({ uid, name, earthAnimal }: SearchResultItem) => {
       />
       <Link
         className="card-list__item-link"
-        href={`/search?searchTerm=${currentSearchTerm}&page=${currentPage}&per_page=${currentPerPage}&details=${uid}`}
+        href={`/search?searchTerm=${keywords}&page=${page}&per_page=${perPage}&details=${uid}`}
         data-testid="card-list__item-link"
       >
         <strong>{name || 'Undefined name'}</strong> -

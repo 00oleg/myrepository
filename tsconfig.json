@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -24,13 +20,6 @@
     ],
     "strictNullChecks": true
   },
-  "include": [
-    "next-env.d.ts",
-    "./dist/types/**/*.ts",
-    "**/*.ts",
-    "**/*.tsx"
-, "src/__tests__/selectedItemsStore.test.tsx_", "src/__tests__/Search.test.tsx_", "src/__tests__/Results.test.tsx_", "src/__tests__/ResultActions.test.tsx_", "src/__tests__/Pagination.test.tsx_", "src/__tests__/Loading.test.tsx_", "src/__tests__/ErrorBoundary.test.tsx_", "src/__tests__/Detail.test.tsx_", "src/__tests__/Card.test.tsx_", "src/__tests__/App.test.tsx_", "src/__tests__/About.test.tsx_"  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "./dist/types/**/*.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }
