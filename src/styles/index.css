@@ -334,3 +334,55 @@ input[type='checkbox']:checked::before {
   gap: 10px;
   padding-top: 15px;
 }
+
+.not-found-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  text-align: center;
+  padding: 2rem;
+}
+
+.not-found-title {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  color: #f66161;
+}
+
+.not-found-subtitle {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.not-found-description {
+  margin-bottom: 2rem;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.app.light .not-found-description {
+  color: #666;
+}
+
+.app .not-found-description {
+  color: #999;
+}
+
+.not-found-link {
+  padding: 0.75rem 1.5rem;
+  background-color: #343dee;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+
+.not-found-link:hover {
+  background-color: #9ca1fd;
+  transform: translateY(-1px);
+}

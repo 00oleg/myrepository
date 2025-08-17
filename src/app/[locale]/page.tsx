@@ -1,3 +1,5 @@
+import { redirect } from 'next/navigation';
+
 export default function LocalePage() {
-  return null;
+  redirect('/search');
 }
