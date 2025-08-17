@@ -1,0 +1,72 @@
+{
+  "navigation": {
+    "home": "Главная",
+    "about": "О нас"
+  },
+  "search": {
+    "title": "Поиск животных",
+    "placeholder": "Поиск животных...",
+    "searchButton": "Найти",
+    "resultsCount": "Найдено результатов: {count}",
+    "noResults": "Результаты не найдены",
+    "loadingResults": "Загрузка результатов...",
+    "errorLoading": "Ошибка загрузки результатов"
+  },
+  "pagination": {
+    "page": "Страница",
+    "perPage": "На странице"
+  },
+  "actions": {
+    "download": "Скачать CSV",
+    "selectAll": "Выбрать все",
+    "unselectAll": "Снять выделение",
+    "selected": "Выбрано: {count}",
+    "generating": "Генерация...",
+    "failedToGenerate": "Не удалось сгенерировать CSV",
+    "failedToDownload": "Не удалось скачать CSV файл"
+  },
+  "about": {
+    "title": "О нас",
+    "description": "Это приложение для поиска животных, созданное с помощью Next.js.",
+    "developerInfo": "Это приложение разработано Олегом.",
+    "skills": "Мои навыки: ",
+    "appDescription": "Приложение демонстрирует различные детали животных из Star Trek, полученные из внешнего API.",
+    "courseInfo": "Для получения дополнительной информации о курсе React, вы можете ознакомиться с",
+    "courseLink": "курсом React от RS School"
+  },
+  "errors": {
+    "somethingWentWrong": "Что-то пошло не так",
+    "pageNotFound": "Страница не найдена",
+    "tryAgain": "Попробовать снова",
+    "animalNotFound": "Животное не найдено",
+    "failedToFetchSearchResults": "Не удалось загрузить результаты поиска",
+    "failedToLoadAnimalDetails": "Не удалось загрузить детали животного"
+  },
+  "details": {
+    "title": "Детали животного:",
+    "close": "Закрыть",
+    "fields": {
+      "uid": "UID",
+      "name": "Имя",
+      "earthAnimal": "Земное животное",
+      "earthInsect": "Земное насекомое",
+      "avian": "Птица",
+      "canine": "Собачьи",
+      "feline": "Кошачьи"
+    },
+    "yes": "Да",
+    "no": "Нет"
+  },
+  "card": {
+    "undefinedName": "Название не определено",
+    "earthAnimal": "Земное животное"
+  },
+  "theme": {
+    "dark": "Темная",
+    "light": "Светлая"
+  },
+  "language": {
+    "en": "Английский",
+    "ru": "Русский"
+  }
+}

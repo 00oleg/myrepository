@@ -1,0 +1,72 @@
+{
+  "navigation": {
+    "home": "Home",
+    "about": "About"
+  },
+  "search": {
+    "title": "Animal Search",
+    "placeholder": "Search for animals...",
+    "searchButton": "Search",
+    "resultsCount": "{count} results found",
+    "noResults": "No results found",
+    "loadingResults": "Loading results...",
+    "errorLoading": "Error loading results"
+  },
+  "pagination": {
+    "page": "Page",
+    "perPage": "Per Page"
+  },
+  "actions": {
+    "download": "Download CSV",
+    "selectAll": "Select All",
+    "unselectAll": "Unselect All",
+    "selected": "Selected: {count}",
+    "generating": "Generating...",
+    "failedToGenerate": "Failed to generate CSV",
+    "failedToDownload": "Failed to download CSV file"
+  },
+  "about": {
+    "title": "About",
+    "description": "This is an animal search application built with Next.js.",
+    "developerInfo": "This application is developed by Oleg.",
+    "skills": "My Skills: ",
+    "appDescription": "It showcases various Star Trek Animals details fetched from an external API.",
+    "courseInfo": "For more information about React course, you can check out the",
+    "courseLink": "RS School React course"
+  },
+  "errors": {
+    "somethingWentWrong": "Something went wrong",
+    "pageNotFound": "Page not found",
+    "tryAgain": "Try again",
+    "animalNotFound": "Animal not found",
+    "failedToFetchSearchResults": "Failed to fetch search results",
+    "failedToLoadAnimalDetails": "Failed to load animal details"
+  },
+  "details": {
+    "title": "Animal detail:",
+    "close": "Close",
+    "fields": {
+      "uid": "UID",
+      "name": "Name",
+      "earthAnimal": "Earth Animal",
+      "earthInsect": "Earth Insect",
+      "avian": "Avian",
+      "canine": "Canine",
+      "feline": "Feline"
+    },
+    "yes": "Yes",
+    "no": "No"
+  },
+  "card": {
+    "undefinedName": "Undefined name",
+    "earthAnimal": "Earth Animal"
+  },
+  "theme": {
+    "dark": "Dark",
+    "light": "Light"
+  },
+  "language": {
+    "en": "English",
+    "ru": "Russian"
+  }
+}
