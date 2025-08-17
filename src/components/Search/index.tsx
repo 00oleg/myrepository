@@ -1,3 +1,5 @@
+'use client';
+
 import SearchTop from '../../components/SearchTop';
 import SearchResults from '../../components/Results';
 import PaginationResults from '../../components/Pagination';

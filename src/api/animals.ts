@@ -1,11 +1,7 @@
-export interface SearchResult {
-  uid: string;
-  name: string;
-  earthAnimal: string;
-}
+import { SearchResultItem } from '../components/Card';
 
 export interface SearchResults {
-  animals: SearchResult[];
+  animals: SearchResultItem[];
   page: {
     totalPages: number;
   };
