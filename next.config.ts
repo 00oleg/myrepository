@@ -3,6 +3,7 @@ import createNextIntlPlugin from 'next-intl/plugin';
 
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
+  distDir: './dist',
   poweredByHeader: false,
   reactStrictMode: true,
   trailingSlash: false,
