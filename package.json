@@ -10,7 +10,9 @@
     "lint": "eslint .",
     "preview": "next preview",
     "format:fix": "prettier --write .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "deploy": "npm run build && npm run start",
+    "export": "next build && next export"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.84.2",
