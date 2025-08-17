@@ -8,22 +8,22 @@ export default async function AboutPage() {
       <h1>{t('title')}</h1>
       <p>{t('description')}</p>
       <p>
-        This application is developed by Oleg. <br />
-        My Skills: JavaScript, HTML, CSS, ReactJS, NextJS, Redux, Material UI,
-        JQuery, SASS/SCSS, Bootstrap, BackstopJS, BEM, Photoshop, AdobeXD,
-        Figma. <br />
+        {t('developerInfo')} <br />
+        {t('skills')} JavaScript, HTML, CSS, ReactJS, NextJS, Redux, Material
+        UI, JQuery, SASS/SCSS, Bootstrap, BackstopJS, BEM, Photoshop, AdobeXD,
+        Figma.
         <br />
-        It showcases various Star Trek Animals details fetched from an external
-        API.
+        <br />
+        {t('appDescription')}
       </p>
       <p>
-        For more information about React course, you can check out the{' '}
+        {t('courseInfo')}{' '}
         <a
           href="https://rs.school/courses/reactjs"
           target="_blank"
           rel="noopener noreferrer"
         >
-          RS School React course
+          {t('courseLink')}
         </a>
         .
       </p>

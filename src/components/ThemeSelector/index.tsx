@@ -1,8 +1,10 @@
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { useTheme } from '../../ThemeContext';
 
 const ThemeSelector: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
+  const t = useTranslations('theme');
 
   return (
     <div>
@@ -13,7 +15,7 @@ const ThemeSelector: React.FC = () => {
           checked={theme === 'dark'}
           onChange={() => toggleTheme('dark')}
         />
-        Dark
+        {t('dark')}
       </label>
       <label>
         <input
@@ -22,7 +24,7 @@ const ThemeSelector: React.FC = () => {
           checked={theme === 'light'}
           onChange={() => toggleTheme('light')}
         />
-        Light
+        {t('light')}
       </label>
     </div>
   );

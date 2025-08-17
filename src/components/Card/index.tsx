@@ -1,4 +1,5 @@
 import { Link } from '../../i18n/navigation';
+import { useTranslations } from 'next-intl';
 import { useSelectedItemsStore } from '../../store/selectedItemsStore';
 
 export interface queryParams {
@@ -16,6 +17,8 @@ export interface SearchResultItem {
 }
 
 const Card = ({ queryParams, uid, name, earthAnimal }: SearchResultItem) => {
+  const t = useTranslations('card');
+  const tDetails = useTranslations('details');
   const { page, perPage, keywords } = queryParams;
   const { toggleItem, isSelected } = useSelectedItemsStore();
 
@@ -36,9 +39,10 @@ const Card = ({ queryParams, uid, name, earthAnimal }: SearchResultItem) => {
         href={`?searchTerm=${keywords}&page=${page}&per_page=${perPage}&details=${uid}`}
         data-testid="card-list__item-link"
       >
-        <strong>{name || 'Undefined name'}</strong> -
+        <strong>{name || t('undefinedName')}</strong> -
         <span data-testid="card-list__item-earth">
-          Earth Animal: {earthAnimal || false ? 'Yes' : 'No'}
+          {t('earthAnimal')}:{' '}
+          {earthAnimal || false ? tDetails('yes') : tDetails('no')}
         </span>
       </Link>
     </div>

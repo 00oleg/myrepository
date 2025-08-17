@@ -5,7 +5,7 @@ import {
   type DetailResult,
 } from '../../../api/animals';
 import SearchClientPage from '../../../components/Search/SearchClient';
-import { setRequestLocale } from 'next-intl/server';
+import { setRequestLocale, getTranslations } from 'next-intl/server';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,6 +21,7 @@ interface SearchPageProps {
 
 const SearchPage = async ({ params, searchParams }: SearchPageProps) => {
   const { locale } = await params;
+  const t = await getTranslations('errors');
 
   setRequestLocale(locale);
 
@@ -42,7 +43,7 @@ const SearchPage = async ({ params, searchParams }: SearchPageProps) => {
     );
   } catch (error) {
     searchError =
-      error instanceof Error ? error.message : 'Failed to fetch search results';
+      error instanceof Error ? error.message : t('failedToFetchSearchResults');
   }
 
   let detailData: DetailResult | null = null;
@@ -51,13 +52,11 @@ const SearchPage = async ({ params, searchParams }: SearchPageProps) => {
     try {
       detailData = await fetchItemDetail(currentDetails);
       if (!detailData) {
-        detailError = 'Animal not found';
+        detailError = t('animalNotFound');
       }
     } catch (error) {
       detailError =
-        error instanceof Error
-          ? error.message
-          : 'Failed to load animal details';
+        error instanceof Error ? error.message : t('failedToLoadAnimalDetails');
     }
   }
 

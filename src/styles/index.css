@@ -64,6 +64,13 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+button:disabled:hover {
+  border-color: transparent;
+}
 
 .btn-error {
   background-color: #f66161;
@@ -291,9 +298,9 @@ main {
 }
 
 .language-select {
-  background-color: transparent;
+  background-color: var(--bg-color);
   border: 1px solid #bdbdbd;
-  color: inherit;
+  color: var(--txt-color);
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   font-size: 0.875rem;
@@ -308,6 +315,45 @@ main {
 .language-select:focus {
   outline: 2px solid #343dee;
   outline-offset: 2px;
+}
+
+.language-select option {
+  background-color: var(--bg-color);
+  color: var(--txt-color);
+  padding: 0.5rem;
+}
+
+.app .language-select option {
+  background-color: rgb(40, 40, 40);
+  color: white;
+}
+
+.app.light .language-select option {
+  background-color: white;
+  color: black;
+}
+
+.language-select option:hover {
+  background-color: #343dee !important;
+  color: white !important;
+}
+
+.app .language-select option:checked {
+  background-color: #343dee;
+  color: white;
+}
+
+.app.light .language-select option:checked {
+  background-color: #343dee;
+  color: white;
+}
+
+.app .language-select {
+  border-color: #666;
+}
+
+.app.light .language-select {
+  border-color: #bdbdbd;
 }
 
 input[type='checkbox'] {
@@ -385,4 +431,9 @@ input[type='checkbox']:checked::before {
 .not-found-link:hover {
   background-color: #9ca1fd;
   transform: translateY(-1px);
+}
+
+.error-message {
+  color: #f66161;
+  margin-left: 10px;
 }

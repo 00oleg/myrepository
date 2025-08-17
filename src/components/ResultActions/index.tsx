@@ -1,12 +1,14 @@
-import { useRef } from 'react';
+import { useRef, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import { useSelectedItemsStore } from '../../store/selectedItemsStore';
 import type { SelectedItem } from '../../store/selectedItemsStore';
-import convertToCSV from '../../utils/convertToCSV';
+import { generateCSVAction } from '../../app/actions/csv';
 
 const ResultActions = () => {
   const t = useTranslations('actions');
   const linkRef = useRef<HTMLAnchorElement | null>(null);
+  const [isPending, startTransition] = useTransition();
+  const [downloadError, setDownloadError] = useState<string | null>(null);
   const { clearAll, getSelectedItems, getSelectedItemsCount } =
     useSelectedItemsStore();
   const checkedItems = getSelectedItems();
@@ -16,13 +18,28 @@ const ResultActions = () => {
     clearAll();
   };
 
-  const handleDownload = (checkedItems: SelectedItem[]) => {
-    const csvContent = convertToCSV(checkedItems);
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    if (linkRef.current) {
-      linkRef.current.href = URL.createObjectURL(blob);
-      linkRef.current.click();
-    }
+  const handleDownload = async (checkedItems: SelectedItem[]) => {
+    startTransition(async () => {
+      try {
+        setDownloadError(null);
+        const result = await generateCSVAction(checkedItems);
+
+        if (result.success && result.data) {
+          const blob = new Blob([result.data], {
+            type: 'text/csv;charset=utf-8;',
+          });
+          if (linkRef.current) {
+            linkRef.current.href = URL.createObjectURL(blob);
+            linkRef.current.download = result.filename;
+            linkRef.current.click();
+          }
+        } else {
+          setDownloadError(result.error || t('failedToGenerate'));
+        }
+      } catch (error) {
+        setDownloadError(t('failedToDownload', error));
+      }
+    });
   };
 
   if (!checkedItemsTotal) {
@@ -38,14 +55,14 @@ const ResultActions = () => {
       <button
         className="btn-success"
         onClick={() => handleDownload(checkedItems)}
+        disabled={isPending}
       >
-        {t('download')}
+        {isPending ? t('generating') : t('download')}
       </button>
+      {downloadError && <div className="error-message">{downloadError}</div>}
       <a
         ref={linkRef}
         href={linkRef.current?.href}
-        download={`${checkedItemsTotal}_animals.csv`}
-        target="_blank"
         style={{ display: 'none' }}
         rel="noreferrer"
       ></a>

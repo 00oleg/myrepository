@@ -1,17 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import type { DetailResult } from '../../api/animals';
 import { queryParams } from '../Card';
 import { usePathname, useRouter } from '../../i18n/navigation';
-
-const names = {
-  uid: 'UID',
-  name: 'Name',
-  earthAnimal: 'Earth Animal',
-  earthInsect: 'Earth Insect',
-  avian: 'Avian',
-  canine: 'Canine',
-  feline: 'Feline',
-};
 
 interface StaticDetailPageProps {
   detailData: DetailResult | null;
@@ -24,6 +15,8 @@ const Details = ({
   error: propError,
   queryParams,
 }: StaticDetailPageProps) => {
+  const t = useTranslations('details');
+  const tErrors = useTranslations('errors');
   const { replace } = useRouter();
   const pathname = usePathname();
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -40,11 +33,11 @@ const Details = ({
     if (propError) {
       setError(propError);
     } else if (!detailData) {
-      setError('Animal not found');
+      setError(tErrors('animalNotFound'));
     } else {
       setError('');
     }
-  }, [detailData, propError]);
+  }, [detailData, propError, tErrors]);
 
   const displayDetail = detailData || {
     uid: '',
@@ -65,9 +58,9 @@ const Details = ({
           ref={buttonRef}
           onClick={onDismiss}
         >
-          Close
+          {t('close')}
         </button>
-        <h2>Animal detail:</h2>
+        <h2>{t('title')}</h2>
         {error ? (
           <div className="no-results no-results--error">
             <div>{error}</div>
@@ -79,13 +72,15 @@ const Details = ({
                 let val = displayDetail[el as keyof DetailResult];
 
                 if (typeof val === 'boolean') {
-                  val = val ? 'Yes' : 'No';
+                  val = val ? t('yes') : t('no');
                 }
 
                 return (
                   <tr key={el}>
                     <td>
-                      <strong>{names[el as keyof DetailResult]}:</strong>
+                      <strong>
+                        {t(`fields.${el as keyof DetailResult}`)}:
+                      </strong>
                     </td>
                     <td>{val}</td>
                   </tr>
