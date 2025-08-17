@@ -280,6 +280,36 @@ main {
   color: #343dee;
 }
 
+.navbar-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.language-selector {
+  position: relative;
+}
+
+.language-select {
+  background-color: transparent;
+  border: 1px solid #bdbdbd;
+  color: inherit;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  min-width: 60px;
+}
+
+.language-select:hover {
+  border-color: #343dee;
+}
+
+.language-select:focus {
+  outline: 2px solid #343dee;
+  outline-offset: 2px;
+}
+
 input[type='checkbox'] {
   display: inline-block;
   width: 20px;

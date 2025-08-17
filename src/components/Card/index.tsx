@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '../../i18n/navigation';
 import { useSelectedItemsStore } from '../../store/selectedItemsStore';
 
 export interface queryParams {
@@ -33,7 +33,7 @@ const Card = ({ queryParams, uid, name, earthAnimal }: SearchResultItem) => {
       />
       <Link
         className="card-list__item-link"
-        href={`/search?searchTerm=${keywords}&page=${page}&per_page=${perPage}&details=${uid}`}
+        href={`?searchTerm=${keywords}&page=${page}&per_page=${perPage}&details=${uid}`}
         data-testid="card-list__item-link"
       >
         <strong>{name || 'Undefined name'}</strong> -

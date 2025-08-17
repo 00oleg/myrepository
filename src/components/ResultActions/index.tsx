@@ -1,9 +1,11 @@
 import { useRef } from 'react';
+import { useTranslations } from 'next-intl';
 import { useSelectedItemsStore } from '../../store/selectedItemsStore';
 import type { SelectedItem } from '../../store/selectedItemsStore';
 import convertToCSV from '../../utils/convertToCSV';
 
 const ResultActions = () => {
+  const t = useTranslations('actions');
   const linkRef = useRef<HTMLAnchorElement | null>(null);
   const { clearAll, getSelectedItems, getSelectedItemsCount } =
     useSelectedItemsStore();
@@ -29,15 +31,15 @@ const ResultActions = () => {
 
   return (
     <div className="search-result-actions">
-      <span>{checkedItemsTotal} items are selected.</span>
+      <span>{t('selected', { count: checkedItemsTotal })}</span>
       <button className="btn-success" onClick={handleUnselect}>
-        Unselect all
+        {t('unselectAll')}
       </button>
       <button
         className="btn-success"
         onClick={() => handleDownload(checkedItems)}
       >
-        Download
+        {t('download')}
       </button>
       <a
         ref={linkRef}

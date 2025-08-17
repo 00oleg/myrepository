@@ -3,12 +3,14 @@ import {
   fetchItemDetail,
   type SearchResults,
   type DetailResult,
-} from '../../api/animals';
-import SearchClientPage from '../../components/Search/SearchClient';
+} from '../../../api/animals';
+import SearchClientPage from '../../../components/Search/SearchClient';
+import { setRequestLocale } from 'next-intl/server';
 
 export const dynamic = 'force-dynamic';
 
 interface SearchPageProps {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<{
     searchTerm?: string;
     page?: string;
@@ -17,7 +19,11 @@ interface SearchPageProps {
   }>;
 }
 
-const SearchPage = async ({ searchParams }: SearchPageProps) => {
+const SearchPage = async ({ params, searchParams }: SearchPageProps) => {
+  const { locale } = await params;
+
+  setRequestLocale(locale);
+
   const { page, per_page, details, searchTerm } = await searchParams;
 
   const currentSearchTerm = searchTerm ? String(searchTerm) : '';

@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import Loading from '../Loading';
 import Card, { queryParams, type SearchResultItem } from '../Card';
 
@@ -14,6 +15,8 @@ const SearchResults = ({
   error,
   queryParams,
 }: SearchResultsProps) => {
+  const t = useTranslations('search');
+
   if (error) {
     return (
       <div className="search-result">
@@ -30,7 +33,7 @@ const SearchResults = ({
 
   return (
     <div className="search-result">
-      <h2>Search Star Trek Animals</h2>
+      <h2>{t('title')}</h2>
       {results.length ? (
         <div>
           {results.map((result, index) => (
@@ -44,7 +47,7 @@ const SearchResults = ({
           ))}
         </div>
       ) : (
-        <div className="no-results">No results</div>
+        <div className="no-results">{t('noResults')}</div>
       )}
     </div>
   );

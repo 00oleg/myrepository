@@ -1,5 +1,6 @@
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import getArryByNumber from '../../utils/getArryByNumber';
+import { Link } from '../../i18n/navigation';
 
 interface PaginationResultsProps {
   pageNumber: number;
@@ -14,10 +15,12 @@ const PaginationResults = ({
   perPage,
   searchText,
 }: PaginationResultsProps) => {
+  const t = useTranslations('pagination');
+
   return (
     <div className="pagination-result">
       <div className="pagination-result__list">
-        <div className="pagination-result__title">Page:</div>
+        <div className="pagination-result__title">{t('page')}:</div>
         {getArryByNumber(totalPages).map((el: number) => {
           return (
             <Link
@@ -32,7 +35,7 @@ const PaginationResults = ({
       </div>
 
       <div className="pagination-result__list">
-        <div className="pagination-result__title">Per Page:</div>
+        <div className="pagination-result__title">{t('perPage')}:</div>
         {getArryByNumber(3).map((el: number) => {
           const perPageEl = (el + 1) * 10;
 

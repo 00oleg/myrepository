@@ -1,9 +1,9 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
 import useSearchQuery from '../../hooks/useSearchQuery';
 import Search from '.';
 import { DetailResult, SearchResults } from '../../api/animals';
+import { usePathname, useRouter } from '../../i18n/navigation';
 
 interface SearchPageClientProps {
   initialData: SearchResults;

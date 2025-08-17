@@ -1,0 +1,34 @@
+{
+  "navigation": {
+    "home": "Главная",
+    "about": "О нас"
+  },
+  "search": {
+    "title": "Поиск животных",
+    "placeholder": "Поиск животных...",
+    "searchButton": "Найти",
+    "resultsCount": "Найдено результатов: {count}",
+    "noResults": "Результаты не найдены",
+    "loadingResults": "Загрузка результатов...",
+    "errorLoading": "Ошибка загрузки результатов"
+  },
+  "pagination": {
+    "page": "Страница",
+    "perPage": "На странице"
+  },
+  "actions": {
+    "download": "Скачать CSV",
+    "selectAll": "Выбрать все",
+    "unselectAll": "Снять выделение",
+    "selected": "Выбрано: {count}"
+  },
+  "about": {
+    "title": "О нас",
+    "description": "Это приложение для поиска животных, созданное с помощью Next.js и React Query."
+  },
+  "errors": {
+    "somethingWentWrong": "Что-то пошло не так",
+    "pageNotFound": "Страница не найдена",
+    "tryAgain": "Попробовать снова"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "navigation": {
+    "home": "Home",
+    "about": "About"
+  },
+  "search": {
+    "title": "Animal Search",
+    "placeholder": "Search for animals...",
+    "searchButton": "Search",
+    "resultsCount": "{count} results found",
+    "noResults": "No results found",
+    "loadingResults": "Loading results...",
+    "errorLoading": "Error loading results"
+  },
+  "pagination": {
+    "page": "Page",
+    "perPage": "Per Page"
+  },
+  "actions": {
+    "download": "Download CSV",
+    "selectAll": "Select All",
+    "unselectAll": "Unselect All",
+    "selected": "Selected: {count}"
+  },
+  "about": {
+    "title": "About",
+    "description": "This is an animal search application built with Next.js and React Query."
+  },
+  "errors": {
+    "somethingWentWrong": "Something went wrong",
+    "pageNotFound": "Page not found",
+    "tryAgain": "Try again"
+  }
+}

@@ -1,8 +1,11 @@
+import { useTranslations } from 'next-intl';
+
 interface LoadingProps {
   loading?: boolean;
 }
 
 const Loading = (props: LoadingProps) => {
+  const t = useTranslations('search');
   const { loading } = props;
 
   if (!loading) {
@@ -12,7 +15,7 @@ const Loading = (props: LoadingProps) => {
   return (
     <div className="search-result">
       <div data-testid={'loading-item'} aria-label={'Loading'}>
-        Loading...
+        {t('loadingResults')}
       </div>
     </div>
   );

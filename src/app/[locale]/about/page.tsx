@@ -1,7 +1,12 @@
-const AboutPage = () => {
+import { getTranslations } from 'next-intl/server';
+
+export default async function AboutPage() {
+  const t = await getTranslations('about');
+
   return (
     <div className="about-page">
-      <h1>About</h1>
+      <h1>{t('title')}</h1>
+      <p>{t('description')}</p>
       <p>
         This application is developed by Oleg. <br />
         My Skills: JavaScript, HTML, CSS, ReactJS, NextJS, Redux, Material UI,
@@ -24,6 +29,4 @@ const AboutPage = () => {
       </p>
     </div>
   );
-};
-
-export default AboutPage;
+}

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
 import type { DetailResult } from '../../api/animals';
 import { queryParams } from '../Card';
+import { usePathname, useRouter } from '../../i18n/navigation';
 
 const names = {
   uid: 'UID',
