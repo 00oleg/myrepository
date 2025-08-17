@@ -3,7 +3,6 @@
   "buildCommand": "npm run build",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
-  "regions": ["fra1", "cdg1"],
   "functions": {
     "src/app/api/**/*.ts": {
       "runtime": "nodejs18.x"
