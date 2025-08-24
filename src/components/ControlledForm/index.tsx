@@ -4,6 +4,8 @@ import { useCountriesStore } from '../../store/countriesStore';
 import type { UserFormValues } from 'types/user';
 import { validationSchema } from '../../utils/validationSchema';
 import { useYupValidationResolver } from '../../utils/yupResolver';
+import { useEffect, useState } from 'react';
+import PasswordStrength from '../../components/PasswordStrength';
 
 interface ControlledFormProps {
   onClose: () => void;
@@ -12,19 +14,31 @@ interface ControlledFormProps {
 const ControlledForm: React.FC<ControlledFormProps> = ({
   onClose,
 }: ControlledFormProps) => {
+  const [sending, setSending] = useState<boolean>(false);
   const countryList = useCountriesStore((state) => state.list);
   const {
     control,
     handleSubmit,
+    trigger,
+    watch,
     formState: { errors, isValid },
   } = useForm<UserFormValues>({
     resolver: useYupValidationResolver(validationSchema),
-    mode: 'onChange',
-    defaultValues: {},
+    mode: 'all',
   });
+
+  const passwordStrength = watch('password');
+
+  useEffect(() => {
+    if (passwordStrength) {
+      trigger('passwordConfirm');
+    }
+  }, [passwordStrength]);
+
   const addUser = useFormDataStore((state) => state.addUser);
 
   const onSubmit = (data: UserFormValues) => {
+    setSending(true);
     const picture = data.picture[0];
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -50,6 +64,7 @@ const ControlledForm: React.FC<ControlledFormProps> = ({
         className="form-block"
         autoComplete="off"
       >
+        <h2>Controlled Form</h2>
         <div className="form-control">
           <label htmlFor="input-name">Name</label>
           <Controller
@@ -75,6 +90,7 @@ const ControlledForm: React.FC<ControlledFormProps> = ({
             render={({ field }) => (
               <input
                 type="number"
+                min={0}
                 id="input-age"
                 {...field}
                 value={field.value || ''}
@@ -114,15 +130,18 @@ const ControlledForm: React.FC<ControlledFormProps> = ({
           <Controller
             name="password"
             control={control}
-            render={({ field }) => (
-              <input
-                type="password"
-                id="input-password"
-                {...field}
-                value={field.value || ''}
-              />
-            )}
+            render={({ field }) => {
+              return (
+                <input
+                  type="password"
+                  id="input-password"
+                  {...field}
+                  value={field.value || ''}
+                />
+              );
+            }}
           />
+          <PasswordStrength password={passwordStrength} />
           {errors.password && (
             <p className="input-error">{errors.password.message}</p>
           )}
@@ -230,12 +249,16 @@ const ControlledForm: React.FC<ControlledFormProps> = ({
           )}
         </div>
 
-        <div className="form-actions">
+        <div className="form-actions mt-10">
           <button type="button" onClick={onClose} className="btn-secondary">
             Cancel
           </button>
 
-          <button className="btn-success" type="submit" disabled={!isValid}>
+          <button
+            className="btn-success"
+            type="submit"
+            disabled={!isValid || sending}
+          >
             Submit
           </button>
         </div>

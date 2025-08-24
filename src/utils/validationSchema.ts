@@ -17,7 +17,7 @@ export const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email('Invalid email format')
     .matches(
-      /^[A-Za-z0-9\s!@#$%^&*(),.?":{}|<>'_+-=]+$/,
+      /^[A-Za-z0-9\s!@#$%^&*(),.?":{}|<>'_+\-=]+$/,
       'Email can only contain English characters'
     )
     .required('Email is required'),
@@ -26,11 +26,11 @@ export const validationSchema = Yup.object().shape({
     .matches(/[a-z]/, 'Password must contain at least 1 lowercase letter')
     .matches(/\d/, 'Password must contain at least 1 number')
     .matches(
-      /[!@#$%^&*(),.?":{}|<>'_+-=]/,
+      /[!@#$%^&*(),.?":{}|<>'_+\-=]/,
       'Password must contain at least 1 special character'
     )
     .matches(
-      /^[A-Za-z0-9\s!@#$%^&*(),.?":{}|<>'_+-=]+$/,
+      /^[A-Za-z0-9\s!@#$%^&*(),.?":{}|<>'_+\-=]+$/,
       'Password can only contain English characters'
     )
     .required('Password is required'),

@@ -3,6 +3,7 @@ import { useFormDataStore } from '../../store/usersStore';
 import { useCountriesStore } from '../../store/countriesStore';
 import { validationSchema } from '../../utils/validationSchema';
 import * as Yup from 'yup';
+import PasswordStrength from '../../components/PasswordStrength';
 
 interface UncontrolledFormProps {
   onClose: () => void;
@@ -11,6 +12,7 @@ interface UncontrolledFormProps {
 const UncontrolledForm: React.FC<UncontrolledFormProps> = ({
   onClose,
 }: UncontrolledFormProps) => {
+  const [sending, setSending] = useState<boolean>(false);
   const addSubmission = useFormDataStore((state) => state.addUser);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const countryList = useCountriesStore((state) => state.list);
@@ -27,12 +29,15 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({
     country: useRef<HTMLInputElement>(null),
   };
 
+  const passwordStrength = refs.password.current?.value || '';
+
   const handleErrors = (errorParams: object) => {
     setErrors({ ...errorParams });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSending(true);
 
     const values = {
       name: refs.name.current?.value ?? '',
@@ -80,6 +85,7 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({
         });
 
         handleErrors(newErrors);
+        setSending(false);
       }
     }
   };
@@ -97,7 +103,7 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({
 
         <div className="form-control">
           <label htmlFor="input-age">Age</label>
-          <input id="input-age" type="number" ref={refs.age} />
+          <input id="input-age" type="number" min={0} ref={refs.age} />
           {errors.age && <p className="input-error">{errors.age}</p>}
         </div>
 
@@ -116,6 +122,7 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({
             </span>
           </label>
           <input id="input-password" type="password" ref={refs.password} />
+          <PasswordStrength password={passwordStrength} />
           {errors.password && <p className="input-error">{errors.password}</p>}
         </div>
 
@@ -170,11 +177,11 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({
           {errors.country && <p className="input-error">{errors.country}</p>}
         </div>
 
-        <div className="form-actions">
+        <div className="form-actions mt-10">
           <button type="button" onClick={onClose} className="btn-secondary">
             Cancel
           </button>
-          <button type="submit" className="btn-primary">
+          <button type="submit" className="btn-primary" disabled={sending}>
             Submit
           </button>
         </div>

@@ -24,7 +24,7 @@ const Modal: React.FC<ModalProps> = ({
         if (e.key === 'Escape') onClose();
         if (e.key === 'Tab' && modalRef.current) {
           const focusable = modalRef.current.querySelectorAll<HTMLElement>(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            'button, [href], input:not([type="hidden"]), select, textarea, [tabindex]:not([tabindex="-1"]), [role="button"]'
           );
           const first = focusable[0];
           const last = focusable[focusable.length - 1];

@@ -17,6 +17,12 @@ const MainPage = () => {
     setIsControlledModalOpen(value);
   };
 
+  const handleClearLast = () => {
+    setTimeout(() => {
+      clearLast();
+    }, 2000);
+  };
+
   return (
     <div className="main-page">
       <h1 className="main-title">Form Modal</h1>
@@ -41,7 +47,7 @@ const MainPage = () => {
         {users.length ? (
           users.map((user, index) => {
             if (user.isLast) {
-              clearLast();
+              handleClearLast();
             }
 
             return (
