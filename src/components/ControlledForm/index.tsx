@@ -58,7 +58,6 @@ const ControlledForm: React.FC<ControlledFormProps> = ({
 
   return (
     <div>
-      <h2 className="form-title">Controlled Form (React Hook Form)</h2>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="form-block"
@@ -90,7 +89,6 @@ const ControlledForm: React.FC<ControlledFormProps> = ({
             render={({ field }) => (
               <input
                 type="number"
-                min={0}
                 id="input-age"
                 {...field}
                 value={field.value || ''}
@@ -107,7 +105,7 @@ const ControlledForm: React.FC<ControlledFormProps> = ({
             control={control}
             render={({ field }) => (
               <input
-                type="email"
+                type="text"
                 id="input-email"
                 {...field}
                 value={field.value || ''}

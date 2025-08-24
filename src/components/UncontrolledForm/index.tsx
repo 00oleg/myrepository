@@ -92,7 +92,6 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({
 
   return (
     <div>
-      <h2 className="form-title">Uncontrolled Form</h2>
       <form onSubmit={handleSubmit} className="form-block" autoComplete="off">
         <h2>Uncontrolled Form</h2>
         <div className="form-control">
@@ -103,13 +102,13 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({
 
         <div className="form-control">
           <label htmlFor="input-age">Age</label>
-          <input id="input-age" type="number" min={0} ref={refs.age} />
+          <input id="input-age" type="number" ref={refs.age} />
           {errors.age && <p className="input-error">{errors.age}</p>}
         </div>
 
         <div className="form-control">
           <label htmlFor="input-email">Email</label>
-          <input id="input-email" type="email" ref={refs.email} />
+          <input id="input-email" type="text" ref={refs.email} />
           {errors.email && <p className="input-error">{errors.email}</p>}
         </div>
 
@@ -148,8 +147,8 @@ const UncontrolledForm: React.FC<UncontrolledFormProps> = ({
           <label htmlFor="input-gender">Gender</label>
           <select id="input-gender" ref={refs.gender}>
             <option value="">Select Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
           </select>
           {errors.gender && <p className="input-error">{errors.gender}</p>}
         </div>

@@ -36,6 +36,8 @@ export default tseslint.config(
       ...react.configs.recommended.rules,
       ...react.configs['jsx-runtime'].rules,
       'react-hooks/exhaustive-deps': 'off',
+      '@typescript-eslint/no-useless-constructor': 'off',
+      '@typescript-eslint/no-require-imports': 'off',
       '@typescript-eslint/no-dynamic-delete': 'off',
     },
     settings: {
