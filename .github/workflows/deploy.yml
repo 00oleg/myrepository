@@ -2,15 +2,10 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main, master, forms ]
-
-permissions:
-  contents: write
-  pages: write
-  id-token: write
+    branches: [ forms ]
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     
     steps:
@@ -33,8 +28,8 @@ jobs:
       run: npm run build
       
     - name: Deploy to GitHub Pages
-      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/forms'
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./dist
+        force_orphan: true
