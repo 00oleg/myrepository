@@ -1,7 +1,6 @@
 const DATA_URL =
   'https://nyc3.digitaloceanspaces.com/owid-public/data/co2/owid-co2-data.json';
 
-// Simple resource for Suspense
 function createResource<T>(fetcher: () => Promise<T>) {
   let status: 'pending' | 'success' | 'error' = 'pending';
   let result: T | Error;

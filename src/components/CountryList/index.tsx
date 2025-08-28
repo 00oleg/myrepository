@@ -94,10 +94,25 @@ function CountryList() {
   const [modalOpen, setModalOpen] = useState(false);
   const [extraColumns, setExtraColumns] =
     useState<string[]>(defaultExtraColumns);
+  const [expandedCountries, setExpandedCountries] = useState<Set<string>>(
+    new Set()
+  );
 
   const data = useCO2Data() as CO2Data;
   const countries = useMemo(() => Object.entries(data), [data]);
   const availableFields = useMemo(() => getAllYearlyFields(data), [data]);
+
+  const toggleCountryExpansion = (iso: string) => {
+    setExpandedCountries((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(iso)) {
+        newSet.delete(iso);
+      } else {
+        newSet.add(iso);
+      }
+      return newSet;
+    });
+  };
 
   return (
     <div>
@@ -114,14 +129,37 @@ function CountryList() {
             padding: '1rem',
           }}
         >
-          <h2>{country.country || iso}</h2>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <h2>{country.country || iso}</h2>
+            <button
+              onClick={() => toggleCountryExpansion(iso)}
+              style={{
+                padding: '0.5rem 1rem',
+                backgroundColor: '#007ACC',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+              }}
+            >
+              {expandedCountries.has(iso) ? 'Collapse' : 'Expand'}
+            </button>
+          </div>
           <div>Population (latest): {getLatestPopulation(country.data)}</div>
           <div>ISO code: {country.iso_code ?? 'N/A'}</div>
 
-          <CountryTable
-            yearly={country.data ?? []}
-            extraColumns={extraColumns}
-          />
+          {expandedCountries.has(iso) && (
+            <CountryTable
+              yearly={country.data ?? []}
+              extraColumns={extraColumns}
+            />
+          )}
         </div>
       ))}
 
