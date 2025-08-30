@@ -97,6 +97,15 @@ interface SearchBarProps {
   onSearchChange: (query: string) => void;
 }
 
+type SortField = 'name' | 'population';
+type SortOrder = 'asc' | 'desc';
+
+interface SortSelectorProps {
+  sortField: SortField;
+  sortOrder: SortOrder;
+  onSortChange: (field: SortField, order: SortOrder) => void;
+}
+
 function SearchBar({ searchQuery, onSearchChange }: SearchBarProps) {
   return (
     <div className="search-bar">
@@ -109,6 +118,44 @@ function SearchBar({ searchQuery, onSearchChange }: SearchBarProps) {
         placeholder="Enter country name..."
         className="search-input"
       />
+    </div>
+  );
+}
+
+function SortSelector({
+  sortField,
+  sortOrder,
+  onSortChange,
+}: SortSelectorProps) {
+  const handleFieldChange = (field: SortField) => {
+    onSortChange(field, sortOrder);
+  };
+
+  const handleOrderChange = (order: SortOrder) => {
+    onSortChange(sortField, order);
+  };
+
+  return (
+    <div className="sort-selector">
+      <label>Sort by:</label>
+      <div className="sort-controls">
+        <select
+          value={sortField}
+          onChange={(e) => handleFieldChange(e.target.value as SortField)}
+          className="sort-field-select"
+        >
+          <option value="name">Country Name</option>
+          <option value="population">Population</option>
+        </select>
+        <select
+          value={sortOrder}
+          onChange={(e) => handleOrderChange(e.target.value as SortOrder)}
+          className="sort-order-select"
+        >
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </select>
+      </div>
     </div>
   );
 }
@@ -191,23 +238,60 @@ function CountryList() {
     new Set()
   );
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [sortField, setSortField] = useState<SortField>('name');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
 
   const data = useCO2Data() as CO2Data;
   const countries = useMemo(() => Object.entries(data), [data]);
   const availableFields = useMemo(() => getAllYearlyFields(data), [data]);
   const availableYears = useMemo(() => getAllAvailableYears(data), [data]);
 
-  const filteredCountries = useMemo(() => {
-    if (!searchQuery.trim()) {
-      return countries;
+  const filteredAndSortedCountries = useMemo(() => {
+    let filtered = countries;
+    if (searchQuery.trim()) {
+      filtered = countries.filter(([iso, country]) => {
+        const countryName = country.country?.toLowerCase() || iso.toLowerCase();
+        const isoCode = iso.toLowerCase();
+        const query = searchQuery.toLowerCase().trim();
+        return countryName.includes(query) || isoCode.includes(query);
+      });
     }
-    return countries.filter(([iso, country]) => {
-      const countryName = country.country?.toLowerCase() || iso.toLowerCase();
-      const isoCode = iso.toLowerCase();
-      const query = searchQuery.toLowerCase().trim();
-      return countryName.includes(query) || isoCode.includes(query);
+
+    return filtered.sort(([isoA, countryA], [isoB, countryB]) => {
+      let valueA: string | number;
+      let valueB: string | number;
+
+      if (sortField === 'name') {
+        valueA = countryA.country || isoA;
+        valueB = countryB.country || isoB;
+      } else {
+        if (selectedYear) {
+          valueA = getPopulationForYear(countryA.data, selectedYear);
+          valueB = getPopulationForYear(countryB.data, selectedYear);
+        } else {
+          valueA = getLatestPopulation(countryA.data);
+          valueB = getLatestPopulation(countryB.data);
+        }
+
+        valueA = typeof valueA === 'number' ? valueA : 0;
+        valueB = typeof valueB === 'number' ? valueB : 0;
+      }
+
+      let comparison = 0;
+      if (typeof valueA === 'string' && typeof valueB === 'string') {
+        comparison = valueA.localeCompare(valueB);
+      } else {
+        comparison = (valueA as number) - (valueB as number);
+      }
+
+      return sortOrder === 'asc' ? comparison : -comparison;
     });
-  }, [countries, searchQuery]);
+  }, [countries, searchQuery, sortField, sortOrder, selectedYear]);
+
+  const handleSortChange = (field: SortField, order: SortOrder) => {
+    setSortField(field);
+    setSortOrder(order);
+  };
 
   const handleYearChange = (year: number | null) => {
     setSelectedYear(year);
@@ -235,6 +319,12 @@ function CountryList() {
     <div>
       <SearchBar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
+      <SortSelector
+        sortField={sortField}
+        sortOrder={sortOrder}
+        onSortChange={handleSortChange}
+      />
+
       <YearSelector
         availableYears={availableYears}
         selectedYear={selectedYear}
@@ -247,18 +337,18 @@ function CountryList() {
 
       {searchQuery.trim() && (
         <div className="search-results-info">
-          Found {filteredCountries.length} countries matching &quot;
+          Found {filteredAndSortedCountries.length} countries matching &quot;
           {searchQuery}&quot;
         </div>
       )}
 
-      {filteredCountries.length === 0 && searchQuery.trim() ? (
+      {filteredAndSortedCountries.length === 0 && searchQuery.trim() ? (
         <div className="no-results">
           No countries found matching &quot;{searchQuery}&quot;. Try a different
           search term.
         </div>
       ) : (
-        filteredCountries.map(([iso, country]) => (
+        filteredAndSortedCountries.map(([iso, country]) => (
           <div key={iso} className="country-container">
             <div className="country-header">
               <h2>{country.country || iso}</h2>
