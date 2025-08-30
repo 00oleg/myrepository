@@ -92,6 +92,27 @@ interface YearSelectorProps {
   onYearChange: (year: number | null) => void;
 }
 
+interface SearchBarProps {
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+}
+
+function SearchBar({ searchQuery, onSearchChange }: SearchBarProps) {
+  return (
+    <div className="search-bar">
+      <label htmlFor="country-search">Search Countries:</label>
+      <input
+        id="country-search"
+        type="text"
+        value={searchQuery}
+        onChange={(e) => onSearchChange(e.target.value)}
+        placeholder="Enter country name..."
+        className="search-input"
+      />
+    </div>
+  );
+}
+
 function YearSelector({
   availableYears,
   selectedYear,
@@ -169,11 +190,24 @@ function CountryList() {
   const [highlightedCountries, setHighlightedCountries] = useState<Set<string>>(
     new Set()
   );
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const data = useCO2Data() as CO2Data;
   const countries = useMemo(() => Object.entries(data), [data]);
   const availableFields = useMemo(() => getAllYearlyFields(data), [data]);
   const availableYears = useMemo(() => getAllAvailableYears(data), [data]);
+
+  const filteredCountries = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return countries;
+    }
+    return countries.filter(([iso, country]) => {
+      const countryName = country.country?.toLowerCase() || iso.toLowerCase();
+      const isoCode = iso.toLowerCase();
+      const query = searchQuery.toLowerCase().trim();
+      return countryName.includes(query) || isoCode.includes(query);
+    });
+  }, [countries, searchQuery]);
 
   const handleYearChange = (year: number | null) => {
     setSelectedYear(year);
@@ -199,6 +233,8 @@ function CountryList() {
 
   return (
     <div>
+      <SearchBar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+
       <YearSelector
         availableYears={availableYears}
         selectedYear={selectedYear}
@@ -209,39 +245,53 @@ function CountryList() {
         Select Columns
       </button>
 
-      {countries.map(([iso, country]) => (
-        <div key={iso} className="country-container">
-          <div className="country-header">
-            <h2>{country.country || iso}</h2>
-            <button
-              onClick={() => toggleCountryExpansion(iso)}
-              className="country-expand-btn"
-            >
-              {expandedCountries.has(iso) ? 'Collapse' : 'Expand'}
-            </button>
-          </div>
-          <div
-            className={`population-info ${highlightedCountries.has(iso) ? 'highlighted' : ''}`}
-          >
-            Population {selectedYear ? `(${selectedYear})` : '(latest)'}:{' '}
-            {selectedYear
-              ? getPopulationForYear(country.data, selectedYear)
-              : getLatestPopulation(country.data)}
-          </div>
-          <div className="iso-code-info">
-            ISO code: {country.iso_code ?? 'N/A'}
-          </div>
-
-          {expandedCountries.has(iso) && (
-            <CountryTable
-              yearly={country.data ?? []}
-              extraColumns={extraColumns}
-              selectedYear={selectedYear}
-              isHighlighted={highlightedCountries.has(iso)}
-            />
-          )}
+      {searchQuery.trim() && (
+        <div className="search-results-info">
+          Found {filteredCountries.length} countries matching &quot;
+          {searchQuery}&quot;
         </div>
-      ))}
+      )}
+
+      {filteredCountries.length === 0 && searchQuery.trim() ? (
+        <div className="no-results">
+          No countries found matching &quot;{searchQuery}&quot;. Try a different
+          search term.
+        </div>
+      ) : (
+        filteredCountries.map(([iso, country]) => (
+          <div key={iso} className="country-container">
+            <div className="country-header">
+              <h2>{country.country || iso}</h2>
+              <button
+                onClick={() => toggleCountryExpansion(iso)}
+                className="country-expand-btn"
+              >
+                {expandedCountries.has(iso) ? 'Collapse' : 'Expand'}
+              </button>
+            </div>
+            <div
+              className={`population-info ${highlightedCountries.has(iso) ? 'highlighted' : ''}`}
+            >
+              Population {selectedYear ? `(${selectedYear})` : '(latest)'}:{' '}
+              {selectedYear
+                ? getPopulationForYear(country.data, selectedYear)
+                : getLatestPopulation(country.data)}
+            </div>
+            <div className="iso-code-info">
+              ISO code: {country.iso_code ?? 'N/A'}
+            </div>
+
+            {expandedCountries.has(iso) && (
+              <CountryTable
+                yearly={country.data ?? []}
+                extraColumns={extraColumns}
+                selectedYear={selectedYear}
+                isHighlighted={highlightedCountries.has(iso)}
+              />
+            )}
+          </div>
+        ))
+      )}
 
       <ColumnSelectModal
         isOpen={modalOpen}
