@@ -357,3 +357,91 @@ input[type='file'] {
   text-align: center;
   border-left: 2px solid black;
 }
+
+.year-selector {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.year-selector label {
+  font-weight: bold;
+}
+
+.year-select {
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  min-width: 120px;
+  width: auto;
+  height: auto;
+}
+
+.country-container {
+  border: 1px solid #eee;
+  margin-bottom: 2rem;
+  padding: 1rem;
+}
+
+.country-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.country-expand-btn {
+  padding: 0.5rem 1rem;
+  background-color: #007acc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.country-expand-btn:hover {
+  background-color: #005c99;
+}
+
+.population-info {
+  transition: background-color 0.3s ease;
+  padding: 0.25rem;
+  border-radius: 4px;
+  margin: 0.25rem 0;
+}
+
+.population-info.highlighted {
+  background-color: #fff3cd;
+}
+
+.iso-code-info {
+  margin-bottom: 1rem;
+}
+
+.select-columns-btn {
+  margin-bottom: 16px;
+}
+
+.country-table {
+  width: 100%;
+  margin-bottom: 2rem;
+  border-collapse: collapse;
+  transition: background-color 0.3s ease;
+}
+
+.country-table.highlighted {
+  background-color: #fff3cd;
+}
+
+.country-table th {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  background-color: #f5f5f5;
+  text-align: left;
+}
+
+.country-table td {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+}
