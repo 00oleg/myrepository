@@ -203,24 +203,26 @@ function CountryTable({
     : yearly;
 
   return (
-    <table className={`country-table ${isHighlighted ? 'highlighted' : ''}`}>
-      <thead>
-        <tr>
-          {allColumns.map((col) => (
-            <th key={col.key}>{col.label}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {displayData.map((row, idx) => (
-          <tr key={row.year ?? idx}>
+    <div className="country-table-wrapper">
+      <table className={`country-table ${isHighlighted ? 'highlighted' : ''}`}>
+        <thead>
+          <tr>
             {allColumns.map((col) => (
-              <td key={col.key}>{row[col.key] ?? 'N/A'}</td>
+              <th key={col.key}>{col.label}</th>
             ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {displayData.map((row, idx) => (
+            <tr key={row.year ?? idx}>
+              {allColumns.map((col) => (
+                <td key={col.key}>{row[col.key] ?? 'N/A'}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -356,7 +358,7 @@ function CountryList() {
                 onClick={() => toggleCountryExpansion(iso)}
                 className="country-expand-btn"
               >
-                {expandedCountries.has(iso) ? 'Collapse' : 'Expand'}
+                {expandedCountries.has(iso) ? '- Collapse' : '+ Expand'}
               </button>
             </div>
             <div
