@@ -1,4 +1,4 @@
-import type { User } from 'types/user';
+import type { User } from 'types/country';
 import { create } from 'zustand';
 
 const initialState: { users: User[] } = {

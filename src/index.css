@@ -181,15 +181,34 @@ input[type='file'] {
 
 .main-page {
   padding: 2rem;
+  padding-top: 1rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
 .main-title {
-  margin-bottom: 2rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
   font-size: 2rem;
   text-align: center;
   color: var(--txt-color);
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.header-actions__col {
+  width: 50%;
+}
+
+.header-actions__col:last-child {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .year-selector {
@@ -225,6 +244,17 @@ input[type='file'] {
   align-items: center;
 }
 
+.country-header h2 {
+  margin: 0;
+  color: #007acc;
+}
+
+.country-header__info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .country-expand-btn {
   padding: 0.5rem 1rem;
   background-color: #007acc;
@@ -240,17 +270,10 @@ input[type='file'] {
 
 .population-info {
   transition: background-color 0.3s ease;
-  padding: 0.25rem;
-  border-radius: 4px;
-  margin: 0.25rem 0;
 }
 
 .population-info.highlighted {
   background-color: #eab300;
-}
-
-.iso-code-info {
-  margin-bottom: 1rem;
 }
 
 .select-columns-btn {
@@ -286,8 +309,6 @@ input[type='file'] {
 
 .search-bar {
   margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
   gap: 1rem;
 }
 
@@ -335,7 +356,6 @@ input[type='file'] {
 
 .sort-selector {
   margin-bottom: 1rem;
-  display: flex;
   align-items: center;
   gap: 1rem;
 }
@@ -425,21 +445,42 @@ input[type='file'] {
 }
 
 .modal-field-label {
-  display: block;
+  display: flex;
   margin-bottom: 8px;
   cursor: pointer;
 }
 
-.modal-close-button {
+.modal-buttons {
+  display: flex;
+  gap: 12px;
   margin-top: 16px;
+}
+
+.modal-apply-button,
+.modal-cancel-button {
+  flex: 1;
   padding: 8px 16px;
-  background: #007acc;
-  color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-weight: 500;
 }
 
-.modal-close-button:hover {
-  background: #005a9e;
+.modal-apply-button {
+  background: #22cc00;
+  color: white;
+}
+
+.modal-apply-button:hover {
+  background: #75c875;
+}
+
+.modal-cancel-button {
+  background: #f0f0f0;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+.modal-cancel-button:hover {
+  background: #e0e0e0;
 }

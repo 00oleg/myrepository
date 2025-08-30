@@ -1,3 +1,6 @@
+import { useState, useEffect } from 'react';
+import formatFieldName from '../../utils/formatFieldName';
+
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -13,14 +16,33 @@ export default function ColumnSelectModal({
   selectedFields,
   onChange,
 }: ModalProps) {
+  const [localSelectedFields, setLocalSelectedFields] =
+    useState<string[]>(selectedFields);
+
+  useEffect(() => {
+    if (isOpen) {
+      setLocalSelectedFields(selectedFields);
+    }
+  }, [isOpen, selectedFields]);
+
   if (!isOpen) return null;
 
   function handleToggle(field: string) {
-    if (selectedFields.includes(field)) {
-      onChange(selectedFields.filter((f) => f !== field));
+    if (localSelectedFields.includes(field)) {
+      setLocalSelectedFields(localSelectedFields.filter((f) => f !== field));
     } else {
-      onChange([...selectedFields, field]);
+      setLocalSelectedFields([...localSelectedFields, field]);
     }
+  }
+
+  function handleApply() {
+    onChange(localSelectedFields);
+    onClose();
+  }
+
+  function handleCancel() {
+    setLocalSelectedFields(selectedFields);
+    onClose();
   }
 
   return (
@@ -32,16 +54,21 @@ export default function ColumnSelectModal({
             <label key={field} className="modal-field-label">
               <input
                 type="checkbox"
-                checked={selectedFields.includes(field)}
+                checked={localSelectedFields.includes(field)}
                 onChange={() => handleToggle(field)}
               />
-              {field}
+              {formatFieldName(field)}
             </label>
           ))}
         </div>
-        <button onClick={onClose} className="modal-close-button">
-          Close
-        </button>
+        <div className="modal-buttons">
+          <button onClick={handleCancel} className="modal-cancel-button">
+            Cancel
+          </button>
+          <button onClick={handleApply} className="modal-apply-button">
+            Apply
+          </button>
+        </div>
       </div>
     </div>
   );

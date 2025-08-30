@@ -1,230 +1,15 @@
 import { useMemo, useState } from 'react';
 import { useCO2Data } from '../../utils/co2Resource';
 import ColumnSelectModal from '../../components/Modal/ColumnSelectModal';
-
-type YearlyData = {
-  year?: number;
-  population?: number;
-  co2?: number;
-  co2_per_capita?: number;
-  [key: string]: number | string | undefined;
-};
-
-type CountryData = {
-  country: string;
-  iso_code?: string;
-  data: YearlyData[];
-};
-type CO2Data = {
-  [iso: string]: CountryData;
-};
-interface CountryTableProps {
-  yearly: YearlyData[];
-  extraColumns: string[];
-  selectedYear?: number | null;
-  isHighlighted?: boolean;
-}
-
-function getAllYearlyFields(data: CO2Data): string[] {
-  const fields = new Set<string>();
-  for (const country of Object.values(data)) {
-    if (Array.isArray(country.data)) {
-      for (const row of country.data) {
-        Object.keys(row).forEach((k) => fields.add(k));
-      }
-    }
-  }
-  ['year', 'population', 'co2', 'co2_per_capita'].forEach((k) =>
-    fields.delete(k)
-  );
-  return Array.from(fields).sort();
-}
-
-function getAllAvailableYears(data: CO2Data): number[] {
-  const years = new Set<number>();
-  for (const country of Object.values(data)) {
-    if (Array.isArray(country.data)) {
-      for (const row of country.data) {
-        if (typeof row.year === 'number') {
-          years.add(row.year);
-        }
-      }
-    }
-  }
-  return Array.from(years).sort((a, b) => b - a);
-}
-
-function getLatestPopulation(data: YearlyData[] | undefined): number | string {
-  if (!Array.isArray(data)) return 'N/A';
-  for (let i = data.length - 1; i >= 0; i--) {
-    const pop = data[i].population;
-    if (typeof pop === 'number') return pop;
-    if (typeof pop === 'string') return pop;
-  }
-  return 'N/A';
-}
-
-function getPopulationForYear(
-  data: YearlyData[] | undefined,
-  year: number | null
-): number | string {
-  if (!Array.isArray(data) || year === null) return 'N/A';
-  const yearData = data.find((item) => item.year === year);
-  if (yearData && typeof yearData.population === 'number') {
-    return yearData.population;
-  }
-  if (yearData && typeof yearData.population === 'string') {
-    return yearData.population;
-  }
-  return 'N/A';
-}
-
-const baseColumns = [
-  { key: 'year', label: 'Year' },
-  { key: 'population', label: 'Population' },
-  { key: 'co2', label: 'CO2' },
-  { key: 'co2_per_capita', label: 'CO2 per Capita' },
-];
-
-interface YearSelectorProps {
-  availableYears: number[];
-  selectedYear: number | null;
-  onYearChange: (year: number | null) => void;
-}
-
-interface SearchBarProps {
-  searchQuery: string;
-  onSearchChange: (query: string) => void;
-}
-
-type SortField = 'name' | 'population';
-type SortOrder = 'asc' | 'desc';
-
-interface SortSelectorProps {
-  sortField: SortField;
-  sortOrder: SortOrder;
-  onSortChange: (field: SortField, order: SortOrder) => void;
-}
-
-function SearchBar({ searchQuery, onSearchChange }: SearchBarProps) {
-  return (
-    <div className="search-bar">
-      <label htmlFor="country-search">Search Countries:</label>
-      <input
-        id="country-search"
-        type="text"
-        value={searchQuery}
-        onChange={(e) => onSearchChange(e.target.value)}
-        placeholder="Enter country name..."
-        className="search-input"
-      />
-    </div>
-  );
-}
-
-function SortSelector({
-  sortField,
-  sortOrder,
-  onSortChange,
-}: SortSelectorProps) {
-  const handleFieldChange = (field: SortField) => {
-    onSortChange(field, sortOrder);
-  };
-
-  const handleOrderChange = (order: SortOrder) => {
-    onSortChange(sortField, order);
-  };
-
-  return (
-    <div className="sort-selector">
-      <label>Sort by:</label>
-      <div className="sort-controls">
-        <select
-          value={sortField}
-          onChange={(e) => handleFieldChange(e.target.value as SortField)}
-          className="sort-field-select"
-        >
-          <option value="name">Country Name</option>
-          <option value="population">Population</option>
-        </select>
-        <select
-          value={sortOrder}
-          onChange={(e) => handleOrderChange(e.target.value as SortOrder)}
-          className="sort-order-select"
-        >
-          <option value="asc">Ascending</option>
-          <option value="desc">Descending</option>
-        </select>
-      </div>
-    </div>
-  );
-}
-
-function YearSelector({
-  availableYears,
-  selectedYear,
-  onYearChange,
-}: YearSelectorProps) {
-  return (
-    <div className="year-selector">
-      <label htmlFor="year-select">Select Year:</label>
-      <select
-        id="year-select"
-        value={selectedYear || ''}
-        onChange={(e) =>
-          onYearChange(e.target.value ? parseInt(e.target.value) : null)
-        }
-        className="year-select"
-      >
-        <option value="">All Years</option>
-        {availableYears.map((year) => (
-          <option key={year} value={year}>
-            {year}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-}
-
-function CountryTable({
-  yearly,
-  extraColumns,
-  selectedYear,
-  isHighlighted,
-}: CountryTableProps) {
-  const allColumns = [
-    ...baseColumns,
-    ...extraColumns.map((key: string) => ({ key, label: key })),
-  ];
-
-  const displayData = selectedYear
-    ? yearly.filter((item) => item.year === selectedYear)
-    : yearly;
-
-  return (
-    <div className="country-table-wrapper">
-      <table className={`country-table ${isHighlighted ? 'highlighted' : ''}`}>
-        <thead>
-          <tr>
-            {allColumns.map((col) => (
-              <th key={col.key}>{col.label}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {displayData.map((row, idx) => (
-            <tr key={row.year ?? idx}>
-              {allColumns.map((col) => (
-                <td key={col.key}>{row[col.key] ?? 'N/A'}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
+import type { CO2Data, SortField, SortOrder } from '../../types/country';
+import getAllYearlyFields from '../../utils/getAllYearlyFields';
+import getAllAvailableYears from '../../utils/getAllAvailableYears';
+import getPopulationForYear from '../../utils/getPopulationForYear';
+import getLatestPopulation from '../../utils/getLatestPopulation';
+import { SearchBar } from '../SearchBar';
+import { SortSelector } from '../SortSelector';
+import { YearSelector } from '../YearSelector';
+import { CountryItem } from '../CountryItem';
 
 const defaultExtraColumns: string[] = [];
 
@@ -319,23 +104,34 @@ function CountryList() {
 
   return (
     <div>
-      <SearchBar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+      <div className="header-actions">
+        <div className="header-actions__col">
+          <SearchBar
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+          />
 
-      <SortSelector
-        sortField={sortField}
-        sortOrder={sortOrder}
-        onSortChange={handleSortChange}
-      />
+          <button
+            onClick={() => setModalOpen(true)}
+            className="select-columns-btn"
+          >
+            Select Columns
+          </button>
+        </div>
+        <div className="header-actions__col">
+          <SortSelector
+            sortField={sortField}
+            sortOrder={sortOrder}
+            onSortChange={handleSortChange}
+          />
 
-      <YearSelector
-        availableYears={availableYears}
-        selectedYear={selectedYear}
-        onYearChange={handleYearChange}
-      />
-
-      <button onClick={() => setModalOpen(true)} className="select-columns-btn">
-        Select Columns
-      </button>
+          <YearSelector
+            availableYears={availableYears}
+            selectedYear={selectedYear}
+            onYearChange={handleYearChange}
+          />
+        </div>
+      </div>
 
       {searchQuery.trim() && (
         <div className="search-results-info">
@@ -351,37 +147,16 @@ function CountryList() {
         </div>
       ) : (
         filteredAndSortedCountries.map(([iso, country]) => (
-          <div key={iso} className="country-container">
-            <div className="country-header">
-              <h2>{country.country || iso}</h2>
-              <button
-                onClick={() => toggleCountryExpansion(iso)}
-                className="country-expand-btn"
-              >
-                {expandedCountries.has(iso) ? '- Collapse' : '+ Expand'}
-              </button>
-            </div>
-            <div
-              className={`population-info ${highlightedCountries.has(iso) ? 'highlighted' : ''}`}
-            >
-              Population {selectedYear ? `(${selectedYear})` : '(latest)'}:{' '}
-              {selectedYear
-                ? getPopulationForYear(country.data, selectedYear)
-                : getLatestPopulation(country.data)}
-            </div>
-            <div className="iso-code-info">
-              ISO code: {country.iso_code ?? 'N/A'}
-            </div>
-
-            {expandedCountries.has(iso) && (
-              <CountryTable
-                yearly={country.data ?? []}
-                extraColumns={extraColumns}
-                selectedYear={selectedYear}
-                isHighlighted={highlightedCountries.has(iso)}
-              />
-            )}
-          </div>
+          <CountryItem
+            key={iso}
+            iso={iso}
+            country={country}
+            extraColumns={extraColumns}
+            selectedYear={selectedYear}
+            isExpanded={expandedCountries.has(iso)}
+            isHighlighted={highlightedCountries.has(iso)}
+            onToggleExpansion={toggleCountryExpansion}
+          />
         ))
       )}
 
