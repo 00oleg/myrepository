@@ -1,69 +1,113 @@
-# React + TypeScript + Vite
+# My App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+CO2 Emissions by Country
 
-Currently, two official plugins are available:
+## Performance Profiling
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Initial profiling was performed using **React DevTools Profiler**.
 
-## Expanding the ESLint configuration
+- **Tested interactions:**
+  - Sorting a column
+  - Searching for a country
+  - Selecting a year
+  - Adding/removing columns
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Before optimization
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### - Sorting a column:
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### - Screenshots:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
+#### Flame Graph for sorting
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+![Profiler Flame Graph](docs/images/1.jpg)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+#### Ranked Chart for sorting
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
+![Profiler Ranked Chart](docs/images/2.jpg)
+
+### - Searching for a country:
+
+### - Screenshots:
+
+#### Flame Graph for search
+
+![Profiler Flame Graph](docs/images/3.jpg)
+
+#### Ranked Chart for search
+
+![Profiler Ranked Chart](docs/images/4.jpg)
+
+### - Selecting a year:
+
+### - Screenshots:
+
+#### Flame Graph for year
+
+![Profiler Flame Graph](docs/images/5.jpg)
+
+#### Ranked Chart for year
+
+![Profiler Ranked Chart](docs/images/6.jpg)
+
+### - Adding/removing columns:
+
+### - Screenshots:
+
+#### Flame Graph for columns
+
+![Profiler Flame Graph](docs/images/7.jpg)
+
+#### Ranked Chart for columns
+
+![Profiler Ranked Chart](docs/images/8.jpg)
+
+## After optimization
+
+### - Sorting a column:
+
+### - Screenshots:
+
+#### Flame Graph for sorting
+
+![Profiler Flame Graph](docs/images/9.png)
+
+#### Ranked Chart for sorting
+
+![Profiler Ranked Chart](docs/images/10.png)
+
+### - Searching for a country:
+
+### - Screenshots:
+
+#### Flame Graph for search
+
+![Profiler Flame Graph](docs/images/11.png)
+
+#### Ranked Chart for search
+
+![Profiler Ranked Chart](docs/images/12.png)
+
+### - Selecting a year:
+
+### - Screenshots:
+
+#### Flame Graph for year
+
+![Profiler Flame Graph](docs/images/13.png)
+
+#### Ranked Chart for year
+
+![Profiler Ranked Chart](docs/images/14.png)
+
+### - Adding/removing columns:
+
+### - Screenshots:
+
+#### Flame Graph for columns
+
+![Profiler Flame Graph](docs/images/15.png)
+
+#### Ranked Chart for columns
+
+![Profiler Ranked Chart](docs/images/16.png)
