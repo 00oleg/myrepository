@@ -6,6 +6,11 @@ export type YearlyData = {
   [key: string]: number | string | undefined;
 };
 
+export type ExtendedYearlyData = YearlyData & {
+  name?: string;
+  iso_code?: string;
+};
+
 export type CountryData = {
   country: string;
   iso_code?: string;
@@ -20,16 +25,16 @@ export type SortField = 'name' | 'population';
 export type SortOrder = 'asc' | 'desc';
 
 export interface CountryTableProps {
-  yearly: YearlyData[];
+  yearly: (YearlyData | ExtendedYearlyData)[];
   extraColumns: string[];
-  selectedYear?: number | null;
+  selectedYear: number;
   isHighlighted?: boolean;
 }
 
 export interface YearSelectorProps {
   availableYears: number[];
-  selectedYear: number | null;
-  onYearChange: (year: number | null) => void;
+  selectedYear: number;
+  onYearChange: (year: number) => void;
 }
 
 export interface SearchBarProps {
@@ -45,16 +50,6 @@ export interface SortSelectorProps {
 
 export interface PopulationInfoProps {
   data: YearlyData[];
-  selectedYear: number | null;
+  selectedYear: number;
   isHighlighted: boolean;
-}
-
-export interface CountryItemProps {
-  iso: string;
-  country: CountryData;
-  extraColumns: string[];
-  selectedYear: number | null;
-  isExpanded: boolean;
-  isHighlighted: boolean;
-  onToggleExpansion: (iso: string) => void;
 }

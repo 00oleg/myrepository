@@ -1,4 +1,6 @@
 const baseColumns = [
+  { key: 'name', label: 'Name' },
+  { key: 'iso_code', label: 'ISO Code' },
   { key: 'year', label: 'Year' },
   { key: 'population', label: 'Population' },
   { key: 'co2', label: 'CO2' },

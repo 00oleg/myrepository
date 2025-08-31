@@ -1,15 +1,18 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useCallback, useEffect } from 'react';
 import { useCO2Data } from '../../utils/co2Resource';
 import ColumnSelectModal from '../../components/Modal/ColumnSelectModal';
-import type { CO2Data, SortField, SortOrder } from '../../types/country';
+import type {
+  CO2Data,
+  SortField,
+  SortOrder,
+  YearlyData,
+} from '../../types/country';
 import getAllYearlyFields from '../../utils/getAllYearlyFields';
 import getAllAvailableYears from '../../utils/getAllAvailableYears';
-import getPopulationForYear from '../../utils/getPopulationForYear';
-import getLatestPopulation from '../../utils/getLatestPopulation';
 import { SearchBar } from '../SearchBar';
 import { SortSelector } from '../SortSelector';
 import { YearSelector } from '../YearSelector';
-import { CountryItem } from '../CountryItem';
+import { CountryTable } from '../CountryTable';
 
 const defaultExtraColumns: string[] = [];
 
@@ -17,13 +20,6 @@ function CountryList() {
   const [modalOpen, setModalOpen] = useState(false);
   const [extraColumns, setExtraColumns] =
     useState<string[]>(defaultExtraColumns);
-  const [expandedCountries, setExpandedCountries] = useState<Set<string>>(
-    new Set()
-  );
-  const [selectedYear, setSelectedYear] = useState<number | null>(null);
-  const [highlightedCountries, setHighlightedCountries] = useState<Set<string>>(
-    new Set()
-  );
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [sortField, setSortField] = useState<SortField>('name');
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
@@ -33,35 +29,57 @@ function CountryList() {
   const availableFields = useMemo(() => getAllYearlyFields(data), [data]);
   const availableYears = useMemo(() => getAllAvailableYears(data), [data]);
 
-  const filteredAndSortedCountries = useMemo(() => {
-    let filtered = countries;
+  const [selectedYear, setSelectedYear] = useState<number>(0);
+  const [isDataHighlighted, setIsDataHighlighted] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (availableYears.length > 0 && selectedYear === 0) {
+      const latestYear = Math.max(...availableYears);
+      setSelectedYear(latestYear);
+    }
+  }, [availableYears, selectedYear]);
+
+  const tableData = useMemo(() => {
+    if (selectedYear === 0) return [];
+
+    const flatData: (YearlyData & { name: string; iso_code?: string })[] = [];
+
+    countries.forEach(([iso, countryData]) => {
+      const yearData = countryData.data.find((d) => d.year === selectedYear);
+
+      if (yearData) {
+        flatData.push({
+          ...yearData,
+          name: countryData.country || iso,
+          iso_code: countryData?.iso_code,
+        });
+      }
+    });
+
+    return flatData;
+  }, [countries, selectedYear]);
+
+  const filteredAndSortedData = useMemo(() => {
+    let filtered = tableData;
+
     if (searchQuery.trim()) {
-      filtered = countries.filter(([iso, country]) => {
-        const countryName = country.country?.toLowerCase() || iso.toLowerCase();
-        const isoCode = iso.toLowerCase();
-        const query = searchQuery.toLowerCase().trim();
-        return countryName.includes(query) || isoCode.includes(query);
+      const query = searchQuery.toLowerCase().trim();
+      filtered = tableData.filter((row) => {
+        const countryName = row.name?.toLowerCase() || '';
+        return countryName.includes(query);
       });
     }
 
-    return filtered.sort(([isoA, countryA], [isoB, countryB]) => {
+    return filtered.sort((a, b) => {
       let valueA: string | number;
       let valueB: string | number;
 
       if (sortField === 'name') {
-        valueA = countryA.country || isoA;
-        valueB = countryB.country || isoB;
+        valueA = a.name || '';
+        valueB = b.name || '';
       } else {
-        if (selectedYear) {
-          valueA = getPopulationForYear(countryA.data, selectedYear);
-          valueB = getPopulationForYear(countryB.data, selectedYear);
-        } else {
-          valueA = getLatestPopulation(countryA.data);
-          valueB = getLatestPopulation(countryB.data);
-        }
-
-        valueA = typeof valueA === 'number' ? valueA : 0;
-        valueB = typeof valueB === 'number' ? valueB : 0;
+        valueA = typeof a.population === 'number' ? a.population : 0;
+        valueB = typeof b.population === 'number' ? b.population : 0;
       }
 
       let comparison = 0;
@@ -73,48 +91,48 @@ function CountryList() {
 
       return sortOrder === 'asc' ? comparison : -comparison;
     });
-  }, [countries, searchQuery, sortField, sortOrder, selectedYear]);
+  }, [tableData, searchQuery, sortField, sortOrder]);
 
-  const handleSortChange = (field: SortField, order: SortOrder) => {
+  const handleSortChange = useCallback((field: SortField, order: SortOrder) => {
     setSortField(field);
     setSortOrder(order);
-  };
+  }, []);
 
-  const handleYearChange = (year: number | null) => {
+  const handleYearChange = useCallback((year: number) => {
     setSelectedYear(year);
+    setIsDataHighlighted(true);
 
-    const allCountryIsos = new Set(countries.map(([iso]) => iso));
-    setHighlightedCountries(allCountryIsos);
     setTimeout(() => {
-      setHighlightedCountries(new Set());
-    }, 1000);
-  };
+      setIsDataHighlighted(false);
+    }, 1500);
+  }, []);
 
-  const toggleCountryExpansion = (iso: string) => {
-    setExpandedCountries((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(iso)) {
-        newSet.delete(iso);
-      } else {
-        newSet.add(iso);
-      }
-      return newSet;
-    });
-  };
+  const handleSearchChange = useCallback((query: string) => {
+    setSearchQuery(query);
+  }, []);
+
+  const handleColumnsChange = useCallback((fields: string[]) => {
+    setExtraColumns(fields);
+  }, []);
+
+  const handleModalClose = useCallback(() => {
+    setModalOpen(false);
+  }, []);
+
+  const handleModalOpen = useCallback(() => {
+    setModalOpen(true);
+  }, []);
 
   return (
-    <div>
+    <>
       <div className="header-actions">
         <div className="header-actions__col">
           <SearchBar
             searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
+            onSearchChange={handleSearchChange}
           />
 
-          <button
-            onClick={() => setModalOpen(true)}
-            className="select-columns-btn"
-          >
+          <button onClick={handleModalOpen} className="select-columns-btn">
             Select Columns
           </button>
         </div>
@@ -133,41 +151,30 @@ function CountryList() {
         </div>
       </div>
 
-      {searchQuery.trim() && (
-        <div className="search-results-info">
-          Found {filteredAndSortedCountries.length} countries matching &quot;
-          {searchQuery}&quot;
-        </div>
-      )}
-
-      {filteredAndSortedCountries.length === 0 && searchQuery.trim() ? (
+      {selectedYear === 0 ? (
+        <div className="loading">Loading data...</div>
+      ) : filteredAndSortedData.length === 0 && searchQuery.trim() ? (
         <div className="no-results">
           No countries found matching &quot;{searchQuery}&quot;. Try a different
           search term.
         </div>
       ) : (
-        filteredAndSortedCountries.map(([iso, country]) => (
-          <CountryItem
-            key={iso}
-            iso={iso}
-            country={country}
-            extraColumns={extraColumns}
-            selectedYear={selectedYear}
-            isExpanded={expandedCountries.has(iso)}
-            isHighlighted={highlightedCountries.has(iso)}
-            onToggleExpansion={toggleCountryExpansion}
-          />
-        ))
+        <CountryTable
+          yearly={filteredAndSortedData}
+          extraColumns={extraColumns}
+          selectedYear={selectedYear}
+          isHighlighted={isDataHighlighted}
+        />
       )}
 
       <ColumnSelectModal
         isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
+        onClose={handleModalClose}
         availableFields={availableFields}
         selectedFields={extraColumns}
-        onChange={setExtraColumns}
+        onChange={handleColumnsChange}
       />
-    </div>
+    </>
   );
 }
 

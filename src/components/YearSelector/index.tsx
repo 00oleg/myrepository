@@ -5,18 +5,25 @@ export function YearSelector({
   selectedYear,
   onYearChange,
 }: YearSelectorProps) {
+  if (availableYears.length === 0) {
+    return null;
+  }
+
   return (
     <div className="year-selector">
       <label htmlFor="year-select">Select Year:</label>
       <select
         id="year-select"
         value={selectedYear || ''}
-        onChange={(e) =>
-          onYearChange(e.target.value ? parseInt(e.target.value) : null)
-        }
+        onChange={(e) => {
+          const year = parseInt(e.target.value);
+          if (!isNaN(year)) {
+            onYearChange(year);
+          }
+        }}
         className="year-select"
       >
-        <option value="">All Years</option>
+        {selectedYear === 0 && <option value="">Select a year...</option>}
         {availableYears.map((year) => (
           <option key={year} value={year}>
             {year}

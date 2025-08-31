@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import type { CountryTableProps } from '../../types/country';
 import baseColumns from '../../utils/baseColumns';
 import formatFieldName from '../../utils/formatFieldName';
@@ -8,21 +9,28 @@ export function CountryTable({
   selectedYear,
   isHighlighted,
 }: CountryTableProps) {
-  const allColumns = [
-    ...baseColumns,
-    ...extraColumns.map((key: string) => ({
-      key,
-      label: formatFieldName(key),
-    })),
-  ];
+  const allColumns = useMemo(
+    () => [
+      ...baseColumns,
+      ...extraColumns.map((key: string) => ({
+        key,
+        label: formatFieldName(key),
+      })),
+    ],
+    [extraColumns]
+  );
 
-  const displayData = selectedYear
-    ? yearly.filter((item) => item.year === selectedYear)
-    : yearly;
+  const displayData = useMemo(() => {
+    const hasCountryInfo = yearly.some((item) => 'name' in item);
+    if (hasCountryInfo) {
+      return yearly;
+    }
+    return yearly.filter((item) => item.year === selectedYear);
+  }, [yearly, selectedYear]);
 
   return (
     <div className="country-table-wrapper">
-      <table className={`country-table ${isHighlighted ? 'highlighted' : ''}`}>
+      <table className="country-table">
         <thead>
           <tr>
             {allColumns.map((col) => (
@@ -32,10 +40,19 @@ export function CountryTable({
         </thead>
         <tbody>
           {displayData.map((row, idx) => (
-            <tr key={row.year ?? idx}>
-              {allColumns.map((col) => (
-                <td key={col.key}>{row[col.key] ?? 'N/A'}</td>
-              ))}
+            <tr key={row.name ?? idx}>
+              {allColumns.map((col) => {
+                const shouldHighlight =
+                  isHighlighted && col.key !== 'name' && col.key !== 'iso_code';
+                return (
+                  <td
+                    key={col.key}
+                    className={shouldHighlight ? 'cell-highlighted' : ''}
+                  >
+                    {row[col.key] ?? 'N/A'}
+                  </td>
+                );
+              })}
             </tr>
           ))}
         </tbody>

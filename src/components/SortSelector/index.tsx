@@ -26,7 +26,7 @@ export function SortSelector({
           onChange={(e) => handleFieldChange(e.target.value as SortField)}
           className="sort-field-select"
         >
-          <option value="name">Country Name</option>
+          <option value="name">Name</option>
           <option value="population">Population</option>
         </select>
         <select
